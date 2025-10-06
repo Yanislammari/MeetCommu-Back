@@ -1,0 +1,176 @@
+scalar DateTime
+scalar URL
+
+enum Role {
+  ADMIN
+  USER
+}
+
+enum Visibility {
+  PUBLIC
+  PRIVATE
+}
+
+enum Status {
+  PENDING
+  ACCEPTED
+  REJECTED
+}
+
+enum ReactionType {
+  LIKE
+  LOVE
+  HAHA
+  WOW
+  SAD
+  ANGRY
+}
+
+enum NotificationType {
+  FRIEND_REQUEST
+  MESSAGE
+  POST_REACTION
+  COMMENT
+}
+
+type User {
+  id: ID!
+  firstName: String!
+  lastName: String!
+  username: String!
+  email: String!
+  role: Role!
+  visibility: Visibility!
+  profilePictureUrl: URL
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Group {
+  id: ID!
+  name: String!
+  users: [User!]!
+  creator: User!
+  admins: [User!]!
+  pictureUrl: URL
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Community {
+  id: ID!
+  name: String!
+  description: String
+  users: [User!]!
+  groups: [Group!]!
+  games: [Game!]!
+  articles: [Article!]!
+  posts: [Post!]!
+  pictureUrl: URL
+  creator: User!
+  admins: [User!]!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Reaction {
+  id: ID!
+  type: ReactionType!
+  user: User!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Post {
+  id: ID!
+  content: String!
+  author: User!
+  reactions: [Reaction!]!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Game {
+  id: ID!
+  title: String!
+  description: String
+  coverImageUrls: [URL!]
+  creator: User!
+  jsFileUrl: URL!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Article {
+  id: ID!
+  title: String!
+  content: String!
+  author: User!
+  pictureUrl: URL
+  markdownFileUrl: URL!
+  comments: [Comment!]!
+  reactions: [Reaction!]!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Comment {
+  id: ID!
+  content: String!
+  author: User!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type FollowRelation {
+  id: ID!
+  follower: User!
+  followed: User!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type AskingFollowingRelation {
+  id: ID!
+  requester: User!
+  requested: User!
+  status: Status!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Message {
+  id: ID!
+  content: String!
+  sender: User!
+  receiver: User!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Conversation {
+  id: ID!
+  participants: [User!]!
+  messages: [Message!]!
+  group: Group
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Notification {
+  id: ID!
+  type: NotificationType!
+  recipient: User!
+  content: String!
+  isRead: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type FollowCommunity {
+  id: ID!
+  user: User!
+  community: Community!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
