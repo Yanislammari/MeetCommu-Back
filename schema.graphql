@@ -1,5 +1,8 @@
 scalar DateTime
 scalar URL
+scalar Email
+scalar Password
+scalar Token
 
 enum Role {
   ADMIN
@@ -38,12 +41,36 @@ type User {
   firstName: String!
   lastName: String!
   username: String!
-  email: String!
+  email: Email!
+  password: Password!
   role: Role!
   visibility: Visibility!
   profilePictureUrl: URL
   createdAt: DateTime!
   updatedAt: DateTime!
+  followers: [User!]!
+  following: [User!]!
+  followerRelations: [FollowRelation!]!
+  followingRelations: [FollowRelation!]!
+  followRequestsSent: [AskingFollowingRelation!]!
+  followRequestsReceived: [AskingFollowingRelation!]!
+  communities: [Community!]!
+  communitiesAdminOf: [Community!]!
+  communitiesCreated: [Community!]!
+  followedCommunities: [Community!]!
+  followCommunityRelations: [FollowCommunity!]!
+  groups: [Group!]!
+  groupsAdminOf: [Group!]!
+  groupsCreated: [Group!]!
+  conversations: [Conversation!]!
+  messagesSent: [Message!]!
+  messagesReceived: [Message!]!
+  posts: [Post!]!
+  articles: [Article!]!
+  comments: [Comment!]!
+  reactions: [Reaction!]!
+  games: [Game!]!
+  notifications: [Notification!]!
 }
 
 type Group {
@@ -55,6 +82,8 @@ type Group {
   pictureUrl: URL
   createdAt: DateTime!
   updatedAt: DateTime!
+  communities: [Community!]!
+  conversations: [Conversation!]!
 }
 
 type Community {
@@ -71,6 +100,8 @@ type Community {
   admins: [User!]!
   createdAt: DateTime!
   updatedAt: DateTime!
+  followers: [User!]!
+  followCommunityRelations: [FollowCommunity!]!
 }
 
 type Reaction {
@@ -79,6 +110,8 @@ type Reaction {
   user: User!
   createdAt: DateTime!
   updatedAt: DateTime!
+  post: Post
+  article: Article
 }
 
 type Post {
@@ -88,6 +121,7 @@ type Post {
   reactions: [Reaction!]!
   createdAt: DateTime!
   updatedAt: DateTime!
+  community: Community!
 }
 
 type Game {
@@ -99,6 +133,7 @@ type Game {
   jsFileUrl: URL!
   createdAt: DateTime!
   updatedAt: DateTime!
+  community: Community!
 }
 
 type Article {
@@ -112,6 +147,7 @@ type Article {
   reactions: [Reaction!]!
   createdAt: DateTime!
   updatedAt: DateTime!
+  community: Community!
 }
 
 type Comment {
@@ -120,6 +156,7 @@ type Comment {
   author: User!
   createdAt: DateTime!
   updatedAt: DateTime!
+  article: Article!
 }
 
 type FollowRelation {
@@ -146,6 +183,7 @@ type Message {
   receiver: User!
   createdAt: DateTime!
   updatedAt: DateTime!
+  conversation: Conversation!
 }
 
 type Conversation {
@@ -173,4 +211,28 @@ type FollowCommunity {
   community: Community!
   createdAt: DateTime!
   updatedAt: DateTime!
+}
+
+input RegisterInput {
+  firstName: String!
+  lastName: String!
+  username: String!
+  email: Email!
+  password: Password!
+  role: Role!
+  profilePictureUrl: URL
+}
+
+input LoginInput {
+  email: Email!
+  password: Password!
+}
+
+type Mutation {
+  register(input: RegisterInput!): Token!
+  login(input: LoginInput!): Token!
+}
+
+type Query {
+  me(token: Token!): User!
 }
