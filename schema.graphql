@@ -233,5 +233,5 @@ type Mutation {
 }
 
 type Query {
-  me(token: String!): User!
+  me: User!
 }

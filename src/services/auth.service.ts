@@ -8,6 +8,7 @@ import RegisterInput from "../models/register.input";
 import { FileUpload } from "graphql-upload/Upload.mjs";
 import { storeFile } from "../config/file";
 import LoginInput from "../models/login.input";
+import TokenPayload from "../config/payload";
 
 dotenv.config();
 
@@ -60,6 +61,22 @@ class AuthService {
     }
 
     return jwt.sign({ id: user.id }, SECRET_KEY, { expiresIn: "7d"});
+  }
+
+  public async decodeToken(token: string): Promise<User> {
+    try {
+      const decodedToken = jwt.verify(token, SECRET_KEY) as TokenPayload;
+      const user: User | null = await this.userRepository.get(decodedToken.id);
+
+      if (!user) {
+        throw new Error("INVALID_TOKEN");
+      }
+
+      return user;
+    }
+    catch (error) {
+      throw new Error("INVALID_TOKEN");
+    }
   }
 }
 

@@ -8,6 +8,7 @@ import { graphqlHTTP } from "express-graphql";
 import graphqlUploadExpress from "graphql-upload/graphqlUploadExpress.mjs";
 import Query from "./resolvers/queries/query";
 import path from "path";
+import { request } from "http";
 
 dotenv.config();
 
@@ -35,9 +36,16 @@ app.use("/graphql",
     maxFileSize: MAX_FILE_SIZE_UPLOAD,
     maxFiles: MAX_FILE_UPLOAD
   }),
-  graphqlHTTP({
-    schema: schema,
-    graphiql: true
+  graphqlHTTP((request) => {
+    return {
+      schema: schema,
+      graphiql: {
+        headerEditorEnabled: true 
+      },
+      context: {
+        request
+      }
+    }
   }
 ));
 
