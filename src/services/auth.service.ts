@@ -7,6 +7,7 @@ import User from "../models/user";
 import RegisterInput from "../models/register.input";
 import { FileUpload } from "graphql-upload/Upload.mjs";
 import { storeFile } from "../config/file";
+import LoginInput from "../models/login.input";
 
 dotenv.config();
 
@@ -39,13 +40,26 @@ class AuthService {
     };
 
     if (profilePicture) {
-      console.log("profile picture detected");
       const fileName: string = await storeFile(profilePicture, "profile-pictures");
       user.profilePictureUrl = `${BASE_URL}/uploads/profile-pictures/${fileName}`;
     }
 
     const addedUser: User = await this.userRepository.create(user);
     return jwt.sign({ id: addedUser.id }, SECRET_KEY, { expiresIn: "7d"});
+  }
+
+  public async login(input: LoginInput): Promise<string> {
+    const user: User | null = await this.userRepository.getByEmail(input.email);
+    if (!user) {
+      throw new Error("INVALID_EMAIL_CREDENTIALS");
+    }
+
+    const isPasswordValid: boolean = await bcrypt.compare(input.password, user.password.hash);
+    if (!isPasswordValid) {
+      throw new Error("INVALID_PASSWORD_CREDENTIALS");
+    }
+
+    return jwt.sign({ id: user.id }, SECRET_KEY, { expiresIn: "7d"});
   }
 }
 
