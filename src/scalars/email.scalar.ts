@@ -3,7 +3,7 @@ import { GraphQLScalarType } from "graphql";
 const EmailScalar = new GraphQLScalarType({
   name: "Email",
   description: "A valid email address",
-  serialize(value) {
+  serialize(value: any) {
     return value.toLowerCase();
   },
   parseValue(value) {

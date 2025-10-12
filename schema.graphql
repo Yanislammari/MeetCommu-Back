@@ -2,7 +2,6 @@ scalar DateTime
 scalar URL
 scalar Email
 scalar Password
-scalar Token
 
 enum Role {
   ADMIN
@@ -219,8 +218,8 @@ input RegisterInput {
   username: String!
   email: Email!
   password: Password!
-  role: Role!
-  profilePictureUrl: URL
+  role: Role = USER
+  profilePictureUrl: String
 }
 
 input LoginInput {
@@ -229,10 +228,10 @@ input LoginInput {
 }
 
 type Mutation {
-  register(input: RegisterInput!): Token!
-  login(input: LoginInput!): Token!
+  register(input: RegisterInput!): String!
+  login(input: LoginInput!): String!
 }
 
 type Query {
-  me(token: Token!): User!
+  me(token: String!): User!
 }
