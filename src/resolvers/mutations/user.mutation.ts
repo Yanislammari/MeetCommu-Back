@@ -8,7 +8,7 @@ const userService = new UserService();
 
 const UserMutation = {
   updateUser: {
-    type: UserType,
+    type: new GraphQLNonNull(UserType),
     args: {
       id: {
         type: new GraphQLNonNull(GraphQLID)
@@ -25,7 +25,7 @@ const UserMutation = {
     }
   },
   deleteUser: {
-    type: GraphQLBoolean,
+    type: new GraphQLNonNull(GraphQLBoolean),
     args: {
       id: {
         type: new GraphQLNonNull(GraphQLID)

@@ -7,13 +7,13 @@ const userService = new UserService();
 
 const UserQuery = {
   users: {
-    type: new GraphQLList(UserType),
+    type: new GraphQLNonNull(new GraphQLList(UserType)),
     resolve: async (_parent: unknown, _args: any, _context: any) => {
       return userService.getAllUsers();
     }
   },
   user: {
-    type: UserType,
+    type: new GraphQLNonNull(UserType),
     args: {
       id: {
         type: new GraphQLNonNull(GraphQLID)
