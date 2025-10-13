@@ -8,7 +8,6 @@ import { graphqlHTTP } from "express-graphql";
 import graphqlUploadExpress from "graphql-upload/graphqlUploadExpress.mjs";
 import Query from "./resolvers/queries/query";
 import path from "path";
-import { request } from "http";
 
 dotenv.config();
 

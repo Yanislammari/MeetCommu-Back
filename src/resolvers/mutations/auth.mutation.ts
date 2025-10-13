@@ -8,7 +8,7 @@ const authService = new AuthService();
 
 const AuthMutation = {
   register: {
-    type: GraphQLString,
+    type: new GraphQLNonNull(GraphQLString),
     args: {
       input: {
         type: new GraphQLNonNull(RegisterInput)
@@ -22,7 +22,7 @@ const AuthMutation = {
     }
   },
   login: {
-    type: GraphQLString,
+    type: new GraphQLNonNull(GraphQLString),
     args: {
       input: {
         type: new GraphQLNonNull(LoginInput)

@@ -3,7 +3,6 @@ import EmailScalar from "../scalars/email.scalar";
 import PasswordScalar from "../scalars/password.scalar";
 import RoleEnum from "../enums/role.enum";
 import Role from "../models/role";
-import UrlScalar from "../scalars/url.scalar";
 
 const RegisterInput = new GraphQLInputObjectType({
   name: "RegisterInput",
@@ -27,9 +26,6 @@ const RegisterInput = new GraphQLInputObjectType({
     role: {
       type: new GraphQLNonNull(RoleEnum),
       defaultValue: Role.USER
-    },
-    profilePictureUrl: {
-      type: UrlScalar
     }
   }
 });

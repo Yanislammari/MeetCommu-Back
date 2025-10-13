@@ -1,13 +1,12 @@
-import Role from "./role";
+import Role from "../../models/role";
 
-interface RegisterInput {
+interface RegisterInputDto {
   firstName: string;
   lastName: string;
   username: string;
   email: string;
   password: string;
   role: Role;
-  profilePictureUrl?: string;
 }
 
-export default RegisterInput;
+export default RegisterInputDto;

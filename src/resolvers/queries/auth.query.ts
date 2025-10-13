@@ -1,3 +1,4 @@
+import { GraphQLNonNull } from "graphql";
 import AuthService from "../../services/auth.service";
 import UserType from "../../types/user.type";
 
@@ -5,7 +6,7 @@ const authService = new AuthService();
 
 const AuthQuery = {
   me: {
-    type: UserType,
+    type: new GraphQLNonNull(UserType),
     resolve: async (_parent: unknown, args: any, context: any) => {
       try {
         const token: string = context.request.headers.authorization.split(' ')[1];
