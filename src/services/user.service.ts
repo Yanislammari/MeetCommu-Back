@@ -45,6 +45,16 @@ class UserService {
     const updatedUser: User = await this.userRepository.update(id, updatedUserEntity);
     return this.userMapper.userEntityToUserOutputDto(updatedUser);
   }
+
+  public async deleteUser(id: string): Promise<void> {
+    const existingUser: User = await this.userRepository.get(id);
+
+    if (existingUser.profilePictureUrl) {
+      await deleteFile(existingUser.profilePictureUrl);
+    }
+
+    await this.userRepository.delete(id);
+  }
 }
 
 export default UserService;

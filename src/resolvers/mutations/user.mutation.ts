@@ -1,4 +1,4 @@
-import { GraphQLID, GraphQLNonNull } from "graphql";
+import { GraphQLBoolean, GraphQLID, GraphQLNonNull } from "graphql";
 import UserService from "../../services/user.service";
 import UserType from "../../types/user.type";
 import UpdateUserInput from "../../inputs/update.user.input";
@@ -22,6 +22,18 @@ const UserMutation = {
     },
     resolve: async (_parent: unknown, args: any) => {
       return userService.updateUser(args.id, args.input, args.file);
+    }
+  },
+  deleteUser: {
+    type: GraphQLBoolean,
+    args: {
+      id: {
+        type: new GraphQLNonNull(GraphQLID)
+      }
+    },
+    resolve: async (_parent: unknown, args: any) => {
+      await userService.deleteUser(args.id);
+      return true;
     }
   }
 };
