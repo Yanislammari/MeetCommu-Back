@@ -4,11 +4,12 @@ import jwt from "jsonwebtoken";
 import UserRepository from "../repositories/user.repository";
 import UserMapper from "../mappers/user.mapper";
 import User from "../models/user";
-import RegisterInput from "../models/register.input";
 import { FileUpload } from "graphql-upload/Upload.mjs";
 import { storeFile } from "../config/file";
-import LoginInput from "../models/login.input";
 import TokenPayload from "../config/payload";
+import RegisterInputDto from "../dtos/auth/register.input.dto";
+import LoginInputDto from "../dtos/auth/login.input.dto";
+import UserOutputDto from "../dtos/users/user.output.dto";
 
 dotenv.config();
 
@@ -25,7 +26,7 @@ class AuthService {
     this.userMapper = new UserMapper();
   }
 
-  public async register(input: RegisterInput, profilePicture?: Promise<FileUpload>): Promise<string> {
+  public async register(input: RegisterInputDto, profilePicture?: Promise<FileUpload>): Promise<string> {
     const exinstingUser: User | null = await this.userRepository.getByEmail(input.email);
     if (exinstingUser) {
       throw new Error("EMAIL_ALREADY_EXISTS");
@@ -49,7 +50,7 @@ class AuthService {
     return jwt.sign({ id: addedUser.id }, SECRET_KEY, { expiresIn: "7d"});
   }
 
-  public async login(input: LoginInput): Promise<string> {
+  public async login(input: LoginInputDto): Promise<string> {
     const user: User | null = await this.userRepository.getByEmail(input.email);
     if (!user) {
       throw new Error("INVALID_EMAIL_CREDENTIALS");
@@ -63,7 +64,7 @@ class AuthService {
     return jwt.sign({ id: user.id }, SECRET_KEY, { expiresIn: "7d"});
   }
 
-  public async decodeToken(token: string): Promise<User> {
+  public async decodeToken(token: string): Promise<UserOutputDto> {
     try {
       const decodedToken = jwt.verify(token, SECRET_KEY) as TokenPayload;
       const user: User | null = await this.userRepository.get(decodedToken.id);
@@ -72,7 +73,7 @@ class AuthService {
         throw new Error("INVALID_TOKEN");
       }
 
-      return user;
+      return this.userMapper.toDto(user);
     }
     catch (error) {
       throw new Error("INVALID_TOKEN");
