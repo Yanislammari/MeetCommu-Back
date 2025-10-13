@@ -226,9 +226,18 @@ input LoginInput {
   password: Password!
 }
 
+input UpdateUserInput {
+  firstName: String
+  lastName: String
+  username: String
+  email: Email
+  visibility: Visibility
+}
+
 type Mutation {
   register(input: RegisterInput!): String!
   login(input: LoginInput!): String!
+  updateUser(id: ID, input: UpdateUserInput!): User!
 }
 
 type Query {

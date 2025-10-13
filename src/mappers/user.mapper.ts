@@ -3,9 +3,10 @@ import Role from "../models/role";
 import Visibility from "../models/visibility";
 import RegisterInputDto from "../dtos/auth/register.input.dto";
 import UserOutputDto from "../dtos/users/user.output.dto";
+import UpdateUserInputDto from "../dtos/users/update.user.input.dto";
 
 class UserMapper {
-  public toEntity(input: RegisterInputDto): User {
+  public registerInputToUserEntity(input: RegisterInputDto): User {
     return {
       id: "",
       firstName: input.firstName,
@@ -23,7 +24,7 @@ class UserMapper {
     };
   }
 
-  public toDto(user: User): UserOutputDto {
+  public userEntityToUserOutputDto(user: User): UserOutputDto {
     return {
       id: user.id,
       firstName: user.firstName,
@@ -35,6 +36,18 @@ class UserMapper {
       profilePictureUrl: user.profilePictureUrl
     };
   }
+
+  public updateInputToUserEntity(input: UpdateUserInputDto, existingUser: User): User {
+    return {
+      ...existingUser, // on garde les anciennes valeurs
+      firstName: input.firstName ?? existingUser.firstName,
+      lastName: input.lastName ?? existingUser.lastName,
+      username: input.username ?? existingUser.username,
+      email: input.email ?? existingUser.email,
+      visibility: input.visibility ?? existingUser.visibility,
+      updatedAt: new Date()
+    };
+  }    
 }
 
 export default UserMapper;

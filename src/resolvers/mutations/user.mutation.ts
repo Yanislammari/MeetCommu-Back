@@ -1,0 +1,29 @@
+import { GraphQLID, GraphQLNonNull } from "graphql";
+import UserService from "../../services/user.service";
+import UserType from "../../types/user.type";
+import UpdateUserInput from "../../inputs/update.user.input";
+import GraphQLUpload from "graphql-upload/GraphQLUpload.mjs";
+
+const userService = new UserService();
+
+const UserMutation = {
+  updateUser: {
+    type: UserType,
+    args: {
+      id: {
+        type: new GraphQLNonNull(GraphQLID)
+      },
+      input: {
+        type: new GraphQLNonNull(UpdateUserInput)
+      },
+      file: {
+        type: GraphQLUpload
+      }
+    },
+    resolve: async (_parent: unknown, args: any) => {
+      return userService.updateUser(args.id, args.input, args.file);
+    }
+  }
+};
+
+export default UserMutation;

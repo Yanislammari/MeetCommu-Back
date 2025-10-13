@@ -32,7 +32,7 @@ class AuthService {
       throw new Error("EMAIL_ALREADY_EXISTS");
     }
 
-    const user: User = this.userMapper.toEntity(input);
+    const user: User = this.userMapper.registerInputToUserEntity(input);
     const salt: string = await bcrypt.genSalt(SALT_ROUNDS);
     const hashedPassword: string = await bcrypt.hash(input.password, salt);
     
@@ -73,7 +73,7 @@ class AuthService {
         throw new Error("INVALID_TOKEN");
       }
 
-      return this.userMapper.toDto(user);
+      return this.userMapper.userEntityToUserOutputDto(user);
     }
     catch (error) {
       throw new Error("INVALID_TOKEN");
