@@ -15,6 +15,11 @@ class UserService {
     const users = await this.userRepository.getAll();
     return users.map(user => this.userMapper.toDto(user));
   }
+
+  public async getUserById(id: string): Promise<UserOutputDto> {
+    const user = await this.userRepository.get(id);
+    return this.userMapper.toDto(user);
+  }
 }
 
 export default UserService;
