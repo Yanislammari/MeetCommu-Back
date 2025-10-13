@@ -15,6 +15,11 @@ class CommunityService {
     const communities = await this.communityRepository.getAll();
     return communities.map(community => this.communityMapper.communityEntityToCommunityOutputDto(community));
   }
+
+  public async getCommunityById(id: string): Promise<CommunityOutputDto> {
+    const community = await this.communityRepository.get(id);
+    return this.communityMapper.communityEntityToCommunityOutputDto(community);
+  }
 }
 
 export default CommunityService;

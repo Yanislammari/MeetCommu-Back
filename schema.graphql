@@ -246,4 +246,5 @@ type Query {
   users: [User!]!
   user(id: ID!): User
   communities: [Community!]!
+  community(id: ID!): Community
 }
