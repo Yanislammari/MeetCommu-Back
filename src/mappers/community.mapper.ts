@@ -1,4 +1,5 @@
 import CommunityOutputDto from "../dtos/community/community.output.dto";
+import CreateCommunityInputDto from "../dtos/community/create.community.input.dto";
 import Community from "../models/community";
 
 class CommunityMapper {
@@ -12,6 +13,17 @@ class CommunityMapper {
       adminIds: community.adminIds,
       createdAt: community.createdAt,
       updatedAt: community.updatedAt
+    }
+  }
+
+  public createCommunityInputDtoToCommunityEntity(input: CreateCommunityInputDto): Community {
+    return {
+      id: "",
+      name: input.name,
+      creatorId: "",
+      adminIds: [],
+      createdAt: new Date(),
+      updatedAt: new Date()
     }
   }
 }

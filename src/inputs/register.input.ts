@@ -9,7 +9,7 @@ const RegisterInput = new GraphQLInputObjectType({
   description: "Input type for user registration",
   fields: {
     firstName: {
-      type: new GraphQLNonNull(GraphQLString)
+      type: new GraphQLNonNull(GraphQLString),
     },
     lastName: {
       type: new GraphQLNonNull(GraphQLString)

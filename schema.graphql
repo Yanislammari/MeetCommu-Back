@@ -234,11 +234,17 @@ input UpdateUserInput {
   visibility: Visibility
 }
 
+input CreateCommunityInput {
+  name: String!
+  description: String
+}
+
 type Mutation {
   register(input: RegisterInput!): String!
   login(input: LoginInput!): String!
   updateUser(id: ID, input: UpdateUserInput!): User!
   deleteUser(id: ID!): Boolean!
+  createCommunity(input: CreateCommunityInput!): Community!
 }
 
 type Query {
