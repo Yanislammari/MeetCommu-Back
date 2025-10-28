@@ -251,6 +251,7 @@ type Mutation {
   deleteUser(id: ID!): Boolean!
   createCommunity(input: CreateCommunityInput!): Community!
   updateCommunity(id: ID!, input: UpdateCommunityInput!): Community!
+  deleteCommunity(id: ID!): Boolean!
 }
 
 type Query {

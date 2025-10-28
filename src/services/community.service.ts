@@ -60,6 +60,16 @@ class CommunityService {
     const updatedCommunity: Community = await this.communityRepository.update(id, updatedCommunityEntity);
     return this.communityMapper.communityEntityToCommunityOutputDto(updatedCommunity);
   }
+
+  public async deleteCommunity(id: string): Promise<void> {
+    const existingCommunity: Community = await this.communityRepository.get(id);
+
+    if (existingCommunity.pictureUrl) {
+      await deleteFile(existingCommunity.pictureUrl);
+    }
+
+    await this.communityRepository.delete(id);
+  }
 }
 
 export default CommunityService;

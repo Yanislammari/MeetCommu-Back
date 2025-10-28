@@ -1,4 +1,4 @@
-import { GraphQLID, GraphQLNonNull } from "graphql";
+import { GraphQLBoolean, GraphQLID, GraphQLNonNull } from "graphql";
 import CommunityService from "../../services/community.service";
 import CommunityType from "../../types/community.type";
 import CreateCommunityInput from "../../inputs/create.community.input";
@@ -36,6 +36,18 @@ const CommunityMutation = {
     },
     resolve: async (_parent: unknown, args: any, _context: any) => {
       return communityService.updateCommunity(args.id, args.input, args.file);
+    }
+  },
+  deleteCommunity: {
+    type: new GraphQLNonNull(GraphQLBoolean),
+    args: {
+      id: {
+        type: new GraphQLNonNull(GraphQLID)
+      }
+    },
+    resolve: async (_parent: unknown, args: any, _context: any) => {
+      await communityService.deleteCommunity(args.id);
+      return true;
     }
   }
 };
