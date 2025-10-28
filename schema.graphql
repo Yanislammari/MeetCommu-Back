@@ -234,15 +234,30 @@ input UpdateUserInput {
   visibility: Visibility
 }
 
+input CreateCommunityInput {
+  name: String!
+  description: String
+}
+
+input UpdateCommunityInput {
+  name: String
+  description: String
+}
+
 type Mutation {
   register(input: RegisterInput!): String!
   login(input: LoginInput!): String!
-  updateUser(id: ID, input: UpdateUserInput!): User!
+  updateUser(id: ID!, input: UpdateUserInput!): User!
   deleteUser(id: ID!): Boolean!
+  createCommunity(input: CreateCommunityInput!): Community!
+  updateCommunity(id: ID!, input: UpdateCommunityInput!): Community!
+  deleteCommunity(id: ID!): Boolean!
 }
 
 type Query {
   me: User!
   users: [User!]!
   user(id: ID!): User
+  communities: [Community!]!
+  community(id: ID!): Community
 }

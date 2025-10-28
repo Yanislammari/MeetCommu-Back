@@ -39,7 +39,7 @@ class UserMapper {
 
   public updateInputToUserEntity(input: UpdateUserInputDto, existingUser: User): User {
     return {
-      ...existingUser, // on garde les anciennes valeurs
+      ...existingUser,
       firstName: input.firstName ?? existingUser.firstName,
       lastName: input.lastName ?? existingUser.lastName,
       username: input.username ?? existingUser.username,

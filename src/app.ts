@@ -8,6 +8,10 @@ import { graphqlHTTP } from "express-graphql";
 import graphqlUploadExpress from "graphql-upload/graphqlUploadExpress.mjs";
 import Query from "./resolvers/queries/query";
 import path from "path";
+import AuthService from "./services/auth.service";
+import UserRepository from "./repositories/user.repository";
+import User from "./models/user";
+import UserOutputDto from "./dtos/users/user.output.dto";
 
 dotenv.config();
 
@@ -35,14 +39,26 @@ app.use("/graphql",
     maxFileSize: MAX_FILE_SIZE_UPLOAD,
     maxFiles: MAX_FILE_UPLOAD
   }),
-  graphqlHTTP((request) => {
+  graphqlHTTP(async (request) => {
+    const token: string | undefined = request.headers.authorization?.split(" ")[1];
+    let user: User | null = null;
+
+    if (token) {
+      const authService = new AuthService();
+      const userRepository = new UserRepository();
+
+      const userOutput: UserOutputDto = await authService.decodeToken(token);
+      user = await userRepository.get(userOutput.id);
+    }
+
     return {
       schema: schema,
       graphiql: {
         headerEditorEnabled: true 
       },
       context: {
-        request
+        request,
+        user
       }
     }
   }
