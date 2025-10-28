@@ -1,5 +1,4 @@
-import { GraphQLNonNull, GraphQLString } from "graphql";
-import { GraphQLInputObjectType } from "graphql";
+import { GraphQLInputObjectType, GraphQLNonNull, GraphQLString } from "graphql";
 
 const CreateCommunityInput = new GraphQLInputObjectType({
   name: "CreateCommunityInput",
