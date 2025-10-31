@@ -8,8 +8,13 @@ class UserRepository extends BaseRepository<User> {
     super(mongoose.model<User>("User", UserSchema));
   }
 
-  public async getByEmail(email: String): Promise<User | null> {
+  public async getByEmail(email: string): Promise<User | null> {
     const user = await this.model.findOne({ email });
+    return user?.toObject() ?? null;
+  }
+
+  public async getByUsername(username: string): Promise<User | null> {
+    const user = await this.model.findOne({ username });
     return user?.toObject() ?? null;
   }
 }

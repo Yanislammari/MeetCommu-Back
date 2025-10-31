@@ -256,6 +256,7 @@ type Mutation {
 
 type Query {
   me: User!
+  checkUsernameAvailability(username: String!): Boolean!
   users: [User!]!
   user(id: ID!): User
   communities: [Community!]!

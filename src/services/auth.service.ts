@@ -32,6 +32,11 @@ class AuthService {
       throw new Error("EMAIL_ALREADY_EXISTS");
     }
 
+    const existingUsername: User | null = await this.userRepository.getByUsername(input.username);
+    if (existingUsername) {
+      throw new Error("USERNAME_ALREADY_EXISTS");
+    }
+
     const user: User = this.userMapper.registerInputToUserEntity(input);
     const salt: string = await bcrypt.genSalt(SALT_ROUNDS);
     const hashedPassword: string = await bcrypt.hash(input.password, salt);
@@ -62,6 +67,11 @@ class AuthService {
     }
 
     return jwt.sign({ id: user.id }, SECRET_KEY, { expiresIn: "7d"});
+  }
+
+  public async checkUsernameAvailability(username: string): Promise<boolean> {
+    const user: User | null = await this.userRepository.getByUsername(username);
+    return user ? false : true;
   }
 
   public async decodeToken(token: string): Promise<UserOutputDto> {

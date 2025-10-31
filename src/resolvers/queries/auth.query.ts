@@ -1,4 +1,4 @@
-import { GraphQLNonNull } from "graphql";
+import { GraphQLBoolean, GraphQLNonNull, GraphQLString } from "graphql";
 import AuthService from "../../services/auth.service";
 import UserType from "../../types/user.type";
 
@@ -20,6 +20,17 @@ const AuthQuery = {
       catch (error) {
         throw new Error("TOKEN_NOT_PROVIDED");
       }
+    }
+  },
+  checkUsernameAvailability: {
+    type: new GraphQLNonNull(GraphQLBoolean),
+    args: {
+      username: {
+        type: new GraphQLNonNull(GraphQLString)
+      }
+    },
+    resolve: async (_parent: unknown, args: any, _context: any) => {
+      return authService.checkUsernameAvailability(args.username);
     }
   }
 };
