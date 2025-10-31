@@ -10,21 +10,27 @@ import TokenPayload from "../config/payload";
 import RegisterInputDto from "../dtos/auth/register.input.dto";
 import LoginInputDto from "../dtos/auth/login.input.dto";
 import UserOutputDto from "../dtos/users/user.output.dto";
+import MailjetService from "./mailjet.service";
+import fs from "fs";
+import path from "path";
 
 dotenv.config();
 
 const SECRET_KEY: string = process.env.SECRET_KEY as string;
 const BASE_URL: string = process.env.BASE_URL as string;
+const FRONTEND_URL: string = process.env.FRONTEND_URL as string;
 const EMAIL_REGEX: RegExp = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 const SALT_ROUNDS: number = 10;
 
 class AuthService {
   private readonly userRepository: UserRepository;
   private readonly userMapper: UserMapper;
+  private readonly mailjetService: MailjetService;
 
   constructor() {
     this.userRepository = new UserRepository();
     this.userMapper = new UserMapper();
+    this.mailjetService = new MailjetService();
   }
 
   public async register(input: RegisterInputDto, profilePicture?: Promise<FileUpload>): Promise<string> {
@@ -83,6 +89,28 @@ class AuthService {
   public async checkUsernameAvailability(username: string): Promise<boolean> {
     const user: User | null = await this.userRepository.getByUsername(username);
     return user ? false : true;
+  }
+
+  public async sendResetPasswordEmail(email: string): Promise<void> {
+    const user: User | null = await this.userRepository.getByEmail(email);
+    if (!user) {
+      throw new Error("EMAIL_NOT_FOUND");
+    }
+
+    const token: string = jwt.sign({ id: user.id }, SECRET_KEY, { expiresIn: "1h" });
+    const resetLink: string = `${FRONTEND_URL}/reset-password?token=${token}`;
+    const subject: string = "Password Reset Request";
+
+    const templatePath = path.join(__dirname, "../../templates/reset-password-mail.html");
+    let htmlBody = fs.readFileSync(templatePath, "utf-8");
+
+    htmlBody = htmlBody
+      .replace("${user.username}", user.username)
+      .replace("${resetLink}", resetLink)
+      .replace("${FRONTEND_URL}", FRONTEND_URL)
+      .replace("${year}", new Date().getFullYear().toString());
+
+    await this.mailjetService.sendEmail(user.email, subject, htmlBody);
   }
 
   public async decodeToken(token: string): Promise<UserOutputDto> {

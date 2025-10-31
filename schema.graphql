@@ -247,6 +247,7 @@ input UpdateCommunityInput {
 type Mutation {
   register(input: RegisterInput!): String!
   login(input: LoginInput!): String!
+  sendPasswordResetEmail(email: Email!): Boolean!
   updateUser(id: ID!, input: UpdateUserInput!): User!
   deleteUser(id: ID!): Boolean!
   createCommunity(input: CreateCommunityInput!): Community!
