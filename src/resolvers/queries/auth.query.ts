@@ -1,6 +1,7 @@
 import { GraphQLBoolean, GraphQLNonNull, GraphQLString } from "graphql";
 import AuthService from "../../services/auth.service";
 import UserType from "../../types/user.type";
+import EmailScalar from "../../scalars/email.scalar";
 
 const authService = new AuthService();
 
@@ -20,6 +21,17 @@ const AuthQuery = {
       catch (error) {
         throw new Error("TOKEN_NOT_PROVIDED");
       }
+    }
+  },
+  checkEmailAvailability: {
+    type: new GraphQLNonNull(GraphQLBoolean),
+    args: {
+      email: {
+        type: new GraphQLNonNull(EmailScalar)
+      }
+    },
+    resolve: async (_parent: unknown, args: any, _context: any) => {
+      return authService.checkEmailAvailability(args.email);
     }
   },
   checkUsernameAvailability: {

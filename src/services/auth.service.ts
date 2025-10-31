@@ -75,6 +75,11 @@ class AuthService {
     return jwt.sign({ id: user.id }, SECRET_KEY, { expiresIn: "7d"});
   }
 
+  public async checkEmailAvailability(email: string): Promise<boolean> {
+    const user: User | null = await this.userRepository.getByEmail(email);
+    return user ? false : true;
+  }
+
   public async checkUsernameAvailability(username: string): Promise<boolean> {
     const user: User | null = await this.userRepository.getByUsername(username);
     return user ? false : true;
