@@ -15,6 +15,7 @@ dotenv.config();
 
 const SECRET_KEY: string = process.env.SECRET_KEY as string;
 const BASE_URL: string = process.env.BASE_URL as string;
+const EMAIL_REGEX: RegExp = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 const SALT_ROUNDS: number = 10;
 
 class AuthService {
@@ -56,9 +57,14 @@ class AuthService {
   }
 
   public async login(input: LoginInputDto): Promise<string> {
-    const user: User | null = await this.userRepository.getByEmail(input.email);
+    const isEmail = EMAIL_REGEX.test(input.identifier);
+
+    const user: User | null = isEmail
+      ? await this.userRepository.getByEmail(input.identifier)
+      : await this.userRepository.getByUsername(input.identifier);
+  
     if (!user) {
-      throw new Error("INVALID_EMAIL_CREDENTIALS");
+      throw new Error(isEmail ? "INVALID_EMAIL_CREDENTIALS" : "INVALID_USERNAME_CREDENTIALS");
     }
 
     const isPasswordValid: boolean = await bcrypt.compare(input.password, user.password.hash);

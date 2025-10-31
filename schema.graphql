@@ -222,7 +222,7 @@ input RegisterInput {
 }
 
 input LoginInput {
-  email: Email!
+  identifier: String!
   password: Password!
 }
 
