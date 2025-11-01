@@ -13,6 +13,7 @@ import UserOutputDto from "../dtos/users/user.output.dto";
 import MailjetService from "./mailjet.service";
 import fs from "fs";
 import path from "path";
+import GoogleOAuthService from "./google.oauth.service";
 
 dotenv.config();
 
@@ -26,11 +27,13 @@ class AuthService {
   private readonly userRepository: UserRepository;
   private readonly userMapper: UserMapper;
   private readonly mailjetService: MailjetService;
+  private readonly googleOAuthService: GoogleOAuthService;
 
   constructor() {
     this.userRepository = new UserRepository();
     this.userMapper = new UserMapper();
     this.mailjetService = new MailjetService();
+    this.googleOAuthService = new GoogleOAuthService();
   }
 
   public async register(input: RegisterInputDto, profilePicture?: Promise<FileUpload>): Promise<string> {
@@ -162,6 +165,18 @@ class AuthService {
         throw new Error("INVALID_TOKEN");
       }
       throw new Error("TOKEN_VERIFICATION_FAILED");
+    }
+  }
+
+  public async loginWithGoogle(idToken: string): Promise<string> {
+    try {
+      return this.googleOAuthService.loginWithGoogle(idToken);
+    }
+    catch (error: any) {
+      if (error.message === "GOOGLE_AUTH_FAILED") {
+        throw new Error("GOOGLE_AUTH_FAILED");
+      }
+      throw new Error("GOOGLE_AUTH_FAILED");
     }
   }
 

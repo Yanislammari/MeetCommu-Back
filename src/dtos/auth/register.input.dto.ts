@@ -1,4 +1,5 @@
 import Role from "../../models/role";
+import Visibility from "../../models/visibility";
 
 interface RegisterInputDto {
   firstName: string;
@@ -7,6 +8,7 @@ interface RegisterInputDto {
   email: string;
   password: string;
   role: Role;
+  visibility: Visibility
 }
 
 export default RegisterInputDto;

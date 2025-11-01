@@ -16,7 +16,7 @@ const AuthQuery = {
           throw new Error("TOKEN_NOT_PROVIDED");
         }
 
-        return authService.decodeToken(token);
+        return await authService.decodeToken(token);
       }
       catch (error) {
         throw new Error("TOKEN_NOT_PROVIDED");
@@ -31,7 +31,7 @@ const AuthQuery = {
       }
     },
     resolve: async (_parent: unknown, args: any, _context: any) => {
-      return authService.checkEmailAvailability(args.email);
+      return await authService.checkEmailAvailability(args.email);
     }
   },
   checkUsernameAvailability: {
@@ -42,14 +42,14 @@ const AuthQuery = {
       }
     },
     resolve: async (_parent: unknown, args: any, _context: any) => {
-      return authService.checkUsernameAvailability(args.username);
+      return await authService.checkUsernameAvailability(args.username);
     }
   },
   verifyResetPasswordToken: {
     type: new GraphQLNonNull(GraphQLBoolean),
     resolve: async (_parent: unknown, args: any, context: any) => {
       const token: string = context.request.headers.authorization.split(' ')[1];
-      return authService.verifyResetPasswordToken(token);
+      return await authService.verifyResetPasswordToken(token);
     }
   }
 };

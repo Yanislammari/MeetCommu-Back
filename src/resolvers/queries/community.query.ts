@@ -9,7 +9,7 @@ const CommunityQuery = {
   communities: {
     type: new GraphQLNonNull(new GraphQLList(CommunityType)),
     resolve: async (_parent: unknown, _args: any, _context: any) => {
-      return communityService.getAllCommunities();
+      return await communityService.getAllCommunities();
     }
   },
   community: {
@@ -20,7 +20,7 @@ const CommunityQuery = {
       }
     },
     resolve: async (_parent: unknown, args: any, _context: any) => {
-      return communityService.getCommunityById(args.id);
+      return await communityService.getCommunityById(args.id);
     }
   }
 };

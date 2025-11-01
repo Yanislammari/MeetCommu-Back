@@ -219,6 +219,7 @@ input RegisterInput {
   email: Email!
   password: Password!
   role: Role = USER
+  visibility: Visibility = PUBLIC
 }
 
 input LoginInput {
@@ -249,6 +250,7 @@ type Mutation {
   login(input: LoginInput!): String!
   sendPasswordResetEmail(email: Email!): Boolean!
   resetPassword(password: Password): Boolean!
+  loginWithGoogle(idToken: String!): String!
   updateUser(id: ID!, input: UpdateUserInput!): User!
   deleteUser(id: ID!): Boolean!
   createCommunity(input: CreateCommunityInput!): Community!
