@@ -3,6 +3,8 @@ import EmailScalar from "../scalars/email.scalar";
 import PasswordScalar from "../scalars/password.scalar";
 import RoleEnum from "../enums/role.enum";
 import Role from "../models/role";
+import VisibilityEnum from "../enums/visibility.enum";
+import Visibility from "../models/visibility";
 
 const RegisterInput = new GraphQLInputObjectType({
   name: "RegisterInput",
@@ -26,6 +28,10 @@ const RegisterInput = new GraphQLInputObjectType({
     role: {
       type: new GraphQLNonNull(RoleEnum),
       defaultValue: Role.USER
+    },
+    visibility: {
+      type: new GraphQLNonNull(VisibilityEnum),
+      defaultValue: Visibility.PUBLIC
     }
   }
 });

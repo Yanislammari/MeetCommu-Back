@@ -21,7 +21,7 @@ const UserMutation = {
       }
     },
     resolve: async (_parent: unknown, args: any) => {
-      return userService.updateUser(args.id, args.input, args.file);
+      return await userService.updateUser(args.id, args.input, args.file);
     }
   },
   deleteUser: {

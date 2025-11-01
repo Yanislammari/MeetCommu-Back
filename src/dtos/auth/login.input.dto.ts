@@ -1,5 +1,5 @@
 interface LoginInputDto {
-  email: string;
+  identifier: string;
   password: string;
 }
 

@@ -9,7 +9,7 @@ const UserQuery = {
   users: {
     type: new GraphQLNonNull(new GraphQLList(UserType)),
     resolve: async (_parent: unknown, _args: any, _context: any) => {
-      return userService.getAllUsers();
+      return await userService.getAllUsers();
     }
   },
   user: {
@@ -20,7 +20,7 @@ const UserQuery = {
       }
     },
     resolve: async (_parent: unknown, args: any, _context: any) => {
-      return userService.getUserById(args.id);
+      return await userService.getUserById(args.id);
     }
   }
 };
