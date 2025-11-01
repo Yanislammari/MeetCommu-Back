@@ -222,7 +222,7 @@ input RegisterInput {
 }
 
 input LoginInput {
-  email: Email!
+  identifier: String!
   password: Password!
 }
 
@@ -247,6 +247,8 @@ input UpdateCommunityInput {
 type Mutation {
   register(input: RegisterInput!): String!
   login(input: LoginInput!): String!
+  sendPasswordResetEmail(email: Email!): Boolean!
+  resetPassword(password: Password): Boolean!
   updateUser(id: ID!, input: UpdateUserInput!): User!
   deleteUser(id: ID!): Boolean!
   createCommunity(input: CreateCommunityInput!): Community!
@@ -256,6 +258,9 @@ type Mutation {
 
 type Query {
   me: User!
+  verifyResetPasswordToken: Boolean!
+  checkEmailAvailability(email: Email!): Boolean!
+  checkUsernameAvailability(username: String!): Boolean!
   users: [User!]!
   user(id: ID!): User
   communities: [Community!]!

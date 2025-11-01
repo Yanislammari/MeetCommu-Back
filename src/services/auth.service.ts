@@ -10,26 +10,38 @@ import TokenPayload from "../config/payload";
 import RegisterInputDto from "../dtos/auth/register.input.dto";
 import LoginInputDto from "../dtos/auth/login.input.dto";
 import UserOutputDto from "../dtos/users/user.output.dto";
+import MailjetService from "./mailjet.service";
+import fs from "fs";
+import path from "path";
 
 dotenv.config();
 
 const SECRET_KEY: string = process.env.SECRET_KEY as string;
 const BASE_URL: string = process.env.BASE_URL as string;
+const FRONTEND_URL: string = process.env.FRONTEND_URL as string;
+const EMAIL_REGEX: RegExp = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 const SALT_ROUNDS: number = 10;
 
 class AuthService {
   private readonly userRepository: UserRepository;
   private readonly userMapper: UserMapper;
+  private readonly mailjetService: MailjetService;
 
   constructor() {
     this.userRepository = new UserRepository();
     this.userMapper = new UserMapper();
+    this.mailjetService = new MailjetService();
   }
 
   public async register(input: RegisterInputDto, profilePicture?: Promise<FileUpload>): Promise<string> {
     const exinstingUser: User | null = await this.userRepository.getByEmail(input.email);
     if (exinstingUser) {
       throw new Error("EMAIL_ALREADY_EXISTS");
+    }
+
+    const existingUsername: User | null = await this.userRepository.getByUsername(input.username);
+    if (existingUsername) {
+      throw new Error("USERNAME_ALREADY_EXISTS");
     }
 
     const user: User = this.userMapper.registerInputToUserEntity(input);
@@ -51,9 +63,14 @@ class AuthService {
   }
 
   public async login(input: LoginInputDto): Promise<string> {
-    const user: User | null = await this.userRepository.getByEmail(input.email);
+    const isEmail = EMAIL_REGEX.test(input.identifier);
+
+    const user: User | null = isEmail
+      ? await this.userRepository.getByEmail(input.identifier)
+      : await this.userRepository.getByUsername(input.identifier);
+  
     if (!user) {
-      throw new Error("INVALID_EMAIL_CREDENTIALS");
+      throw new Error(isEmail ? "INVALID_EMAIL_CREDENTIALS" : "INVALID_USERNAME_CREDENTIALS");
     }
 
     const isPasswordValid: boolean = await bcrypt.compare(input.password, user.password.hash);
@@ -62,6 +79,90 @@ class AuthService {
     }
 
     return jwt.sign({ id: user.id }, SECRET_KEY, { expiresIn: "7d"});
+  }
+
+  public async checkEmailAvailability(email: string): Promise<boolean> {
+    const user: User | null = await this.userRepository.getByEmail(email);
+    return user ? false : true;
+  }
+
+  public async checkUsernameAvailability(username: string): Promise<boolean> {
+    const user: User | null = await this.userRepository.getByUsername(username);
+    return user ? false : true;
+  }
+
+  public async sendResetPasswordEmail(email: string): Promise<void> {
+    const user: User | null = await this.userRepository.getByEmail(email);
+    if (!user) {
+      throw new Error("EMAIL_NOT_FOUND");
+    }
+
+    const token: string = jwt.sign({ id: user.id }, SECRET_KEY, { expiresIn: "1h" });
+    const resetLink: string = `${FRONTEND_URL}/reset-password?token=${token}`;
+    const subject: string = "Password Reset Request";
+
+    const templatePath = path.join(__dirname, "../../templates/reset-password-mail.html");
+    let htmlBody = fs.readFileSync(templatePath, "utf-8");
+
+    htmlBody = htmlBody
+      .replace("${user.username}", user.username)
+      .replace("${resetLink}", resetLink)
+      .replace("${FRONTEND_URL}", FRONTEND_URL)
+      .replace("${year}", new Date().getFullYear().toString());
+
+    await this.mailjetService.sendEmail(user.email, subject, htmlBody);
+  }
+
+  public async resetPassword(password: string, token: string): Promise<void> {
+    try {
+      const decoded = jwt.verify(token, SECRET_KEY) as TokenPayload;
+
+      const user: User | null = await this.userRepository.get(decoded.id);
+      if (!user) {
+        throw new Error("INVALID_TOKEN");
+      }
+
+      const salt: string = await bcrypt.genSalt(SALT_ROUNDS);
+      const hashedPassword: string = await bcrypt.hash(password, salt);
+
+      user.password = {
+        hash: hashedPassword,
+        salt: salt
+      }
+
+      await this.userRepository.update(user.id, user);
+    }
+    catch (error: any) {
+      if (error.name === "TokenExpiredError") {
+        throw new Error("TOKEN_EXPIRED");
+      }
+      if (error.name === "JsonWebTokenError") {
+        throw new Error("INVALID_TOKEN");
+      }
+      throw new Error("RESET_PASSWORD_FAILED");
+    }
+  }
+
+  public async verifyResetPasswordToken(token: string): Promise<boolean> {
+    try {
+      const decoded = jwt.verify(token, SECRET_KEY) as TokenPayload;
+
+      const user: User | null = await this.userRepository.get(decoded.id);
+      if (!user) {
+        throw new Error("INVALID_TOKEN");
+      }
+
+      return true;
+    } 
+    catch (error: any) {
+      if (error.name === "TokenExpiredError") {
+        throw new Error("TOKEN_EXPIRED");
+      }
+      if (error.name === "JsonWebTokenError") {
+        throw new Error("INVALID_TOKEN");
+      }
+      throw new Error("TOKEN_VERIFICATION_FAILED");
+    }
   }
 
   public async decodeToken(token: string): Promise<UserOutputDto> {
