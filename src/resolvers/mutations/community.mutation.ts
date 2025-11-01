@@ -18,7 +18,7 @@ const CommunityMutation = {
       }
     },
     resolve: async (_parent: unknown, args: any, context: any) => {
-      return communityService.addCommunity(args.input, context.request.user.id, args.file);
+      return await communityService.addCommunity(args.input, context.request.user.id, args.file);
     }
   },
   updateCommunity: {
@@ -35,7 +35,7 @@ const CommunityMutation = {
       }
     },
     resolve: async (_parent: unknown, args: any, _context: any) => {
-      return communityService.updateCommunity(args.id, args.input, args.file);
+      return await communityService.updateCommunity(args.id, args.input, args.file);
     }
   },
   deleteCommunity: {
