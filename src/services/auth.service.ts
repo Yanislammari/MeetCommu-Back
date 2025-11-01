@@ -113,6 +113,58 @@ class AuthService {
     await this.mailjetService.sendEmail(user.email, subject, htmlBody);
   }
 
+  public async resetPassword(password: string, token: string): Promise<void> {
+    try {
+      const decoded = jwt.verify(token, SECRET_KEY) as TokenPayload;
+
+      const user: User | null = await this.userRepository.get(decoded.id);
+      if (!user) {
+        throw new Error("INVALID_TOKEN");
+      }
+
+      const salt: string = await bcrypt.genSalt(SALT_ROUNDS);
+      const hashedPassword: string = await bcrypt.hash(password, salt);
+
+      user.password = {
+        hash: hashedPassword,
+        salt: salt
+      }
+
+      await this.userRepository.update(user.id, user);
+    }
+    catch (error: any) {
+      if (error.name === "TokenExpiredError") {
+        throw new Error("TOKEN_EXPIRED");
+      }
+      if (error.name === "JsonWebTokenError") {
+        throw new Error("INVALID_TOKEN");
+      }
+      throw new Error("RESET_PASSWORD_FAILED");
+    }
+  }
+
+  public async verifyResetPasswordToken(token: string): Promise<boolean> {
+    try {
+      const decoded = jwt.verify(token, SECRET_KEY) as TokenPayload;
+
+      const user: User | null = await this.userRepository.get(decoded.id);
+      if (!user) {
+        throw new Error("INVALID_TOKEN");
+      }
+
+      return true;
+    } 
+    catch (error: any) {
+      if (error.name === "TokenExpiredError") {
+        throw new Error("TOKEN_EXPIRED");
+      }
+      if (error.name === "JsonWebTokenError") {
+        throw new Error("INVALID_TOKEN");
+      }
+      throw new Error("TOKEN_VERIFICATION_FAILED");
+    }
+  }
+
   public async decodeToken(token: string): Promise<UserOutputDto> {
     try {
       const decodedToken = jwt.verify(token, SECRET_KEY) as TokenPayload;

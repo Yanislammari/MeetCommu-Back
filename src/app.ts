@@ -44,11 +44,14 @@ app.use("/graphql",
     let user: User | null = null;
 
     if (token) {
-      const authService = new AuthService();
-      const userRepository = new UserRepository();
-
-      const userOutput: UserOutputDto = await authService.decodeToken(token);
-      user = await userRepository.get(userOutput.id);
+      try {
+        const authService = new AuthService();
+        const userRepository = new UserRepository();
+  
+        const userOutput: UserOutputDto = await authService.decodeToken(token);
+        user = await userRepository.get(userOutput.id);
+      }
+      catch (error) {}
     }
 
     return {

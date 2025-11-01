@@ -4,6 +4,7 @@ import RegisterInput from "../../inputs/register.input";
 import GraphQLUpload from "graphql-upload/GraphQLUpload.mjs";
 import LoginInput from "../../inputs/login.input";
 import EmailScalar from "../../scalars/email.scalar";
+import PasswordScalar from "../../scalars/password.scalar";
 
 const authService = new AuthService();
 
@@ -42,6 +43,19 @@ const AuthMutation = {
     },
     resolve: async (_parent: unknown, args: any) => {
       await authService.sendResetPasswordEmail(args.email);
+      return true;
+    }
+  },
+  resetPassword: {
+    type: new GraphQLNonNull(GraphQLBoolean),
+    args: {
+      password: {
+        type: new GraphQLNonNull(PasswordScalar)
+      }
+    },
+    resolve: async (_parent: unknown, args: any, context: any) => {
+      const token: string = context.request.headers.authorization.split(' ')[1];
+      await authService.resetPassword(args.password, token);
       return true;
     }
   }
