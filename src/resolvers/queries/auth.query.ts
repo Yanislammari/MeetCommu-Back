@@ -8,7 +8,7 @@ const authService = new AuthService();
 const AuthQuery = {
   me: {
     type: new GraphQLNonNull(UserType),
-    resolve: async (_parent: unknown, args: any, context: any) => {
+    resolve: async (_parent: unknown, _args: any, context: any) => {
       try {
         const token: string = context.request.headers.authorization.split(' ')[1];
 
