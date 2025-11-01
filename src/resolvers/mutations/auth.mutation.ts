@@ -20,7 +20,7 @@ const AuthMutation = {
       }
     },
     resolve: async (_parent: unknown, args: any) => {
-      return authService.register(args.input, args.file);
+      return await authService.register(args.input, args.file);
     }
   },
   login: {
@@ -31,7 +31,7 @@ const AuthMutation = {
       }
     },
     resolve: async (_parent: unknown, args: any) => {
-      return authService.login(args.input);
+      return await authService.login(args.input);
     }
   },
   sendPasswordResetEmail: {
@@ -57,6 +57,17 @@ const AuthMutation = {
       const token: string = context.request.headers.authorization.split(' ')[1];
       await authService.resetPassword(args.password, token);
       return true;
+    }
+  },
+  loginWithGoogle: {
+    type: new GraphQLNonNull(GraphQLString),
+    args: {
+      idToken: {
+        type: new GraphQLNonNull(GraphQLString)
+      }
+    },
+    resolve: async (_parent: unknown, args: any, context: any) => {
+      return await authService.loginWithGoogle(args.idToken);
     }
   }
 }
