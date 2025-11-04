@@ -3,8 +3,8 @@ import { GraphQLNonNull } from "graphql";
 import { GraphQLInputObjectType } from "graphql";
 import ConversationTypeEnum from "../enums/conversation.type.enum";
 
-const ConversationInput = new GraphQLInputObjectType({
-  name: "ConversationInput",
+const CreateConversationInput = new GraphQLInputObjectType({
+  name: "CreateConversationInput",
   description: "Input type for creating a conversation",
   fields: {
     participantsIds: {
@@ -19,4 +19,4 @@ const ConversationInput = new GraphQLInputObjectType({
   }
 });
 
-export default ConversationInput;
+export default CreateConversationInput;

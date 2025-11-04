@@ -1,5 +1,6 @@
 import ConversationOutputDto from "../dtos/conversation/conversation.output.dto";
 import CreateConversationInputDto from "../dtos/conversation/create.conversation.input.dto";
+import UpdateConversationInputDto from "../dtos/conversation/update.conversation.input.dto";
 import MessageOutputDto from "../dtos/message/message.output.dto";
 import UserOutputDto from "../dtos/users/user.output.dto";
 import Conversation from "../models/conversation";
@@ -40,6 +41,13 @@ class ConversationMapper {
       title: input.title,
       createdAt: new Date(),
       updatedAt: new Date()
+    }
+  }
+
+  public updateConversationInputDtoToConversationEntity(input: UpdateConversationInputDto, existingConversation: Conversation): Conversation {
+    return {
+      ...existingConversation,
+      title: input.title ?? existingConversation.title
     }
   }
 }

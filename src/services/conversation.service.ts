@@ -8,6 +8,8 @@ import Message from "../models/message";
 import ConversationRepository from "../repositories/conversation.repository";
 import MessageRepository from "../repositories/message.repository";
 import dotenv from "dotenv";
+import UpdateConversationInputDto from "../dtos/conversation/update.conversation.input.dto";
+import ConversationType from "../models/conversation.type";
 
 dotenv.config();
 const BASE_URL: string = process.env.BASE_URL as string;
@@ -43,6 +45,23 @@ class ConversationService {
 
     const addedConversation: Conversation = await this.conversationRepository.create(conversation);
     return this.conversationMapper.conversationEntityToConversationOutputDto(addedConversation);
+  }
+
+  public async updateConversation(id: string, input: UpdateConversationInputDto, picture?: Promise<FileUpload>): Promise<ConversationOutputDto> {
+    const existingConversation: Conversation = await this.conversationRepository.get(id);
+    const conversation: Conversation = this.conversationMapper.updateConversationInputDtoToConversationEntity(input, existingConversation);
+
+    if (picture) {
+      if (conversation.pictureUrl && conversation.type === ConversationType.GROUP) {
+        await deleteFile(conversation.pictureUrl);
+      }
+
+      const fileName: string = await storeFile(picture, "conversation-pictures");
+      conversation.pictureUrl = `${BASE_URL}/uploads/conversation-pictures/${fileName}`;
+    }
+
+    const updatedConversation: Conversation = await this.conversationRepository.update(id, conversation);
+    return this.conversationMapper.conversationEntityToConversationOutputDto(updatedConversation);
   }
 
   public async deleteConversation(id: string): Promise<void> {

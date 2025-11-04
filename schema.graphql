@@ -257,6 +257,10 @@ input CreateConversationInput {
   title: String
 }
 
+input UpdateConversationInput {
+  title: String
+}
+
 type Mutation {
   register(input: RegisterInput!): String!
   login(input: LoginInput!): String!
@@ -269,6 +273,7 @@ type Mutation {
   updateCommunity(id: ID!, input: UpdateCommunityInput!): Community!
   deleteCommunity(id: ID!): Boolean!
   createConversation(input: CreateConversationInput!): Conversation!
+  updateConversation(id: ID!, input: UpdateConversationInput!): Conversation!
   deleteConversation(id: ID!): Boolean!
 }
 

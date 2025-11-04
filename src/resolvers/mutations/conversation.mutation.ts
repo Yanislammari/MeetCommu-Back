@@ -1,8 +1,9 @@
 import { GraphQLBoolean, GraphQLID, GraphQLNonNull } from "graphql";
 import ConversationService from "../../services/conversation.service";
 import ConversationType from "../../types/conversation.type";
-import ConversationInput from "../../inputs/create.conversation.input";
+import CreateConversationInput from "../../inputs/create.conversation.input";
 import GraphQLUpload from "graphql-upload/GraphQLUpload.mjs";
+import UpdateConversationInput from "../../inputs/update.conversation.input";
 
 const conversationService = new ConversationService();
 
@@ -11,7 +12,7 @@ const ConversationMutation = {
     type: new GraphQLNonNull(ConversationType),
     args: {
       input: {
-        type: new GraphQLNonNull(ConversationInput)
+        type: new GraphQLNonNull(CreateConversationInput)
       },
       file: {
         type: GraphQLUpload
@@ -20,6 +21,23 @@ const ConversationMutation = {
     resolve: async (_parent: unknown, args: any, _context: any) => {
       return conversationService.addConversation(args.input, args.file);
     }
+  },
+  updateConversation: {
+    type: new GraphQLNonNull(ConversationType),
+    args: {
+      id: {
+        type: new GraphQLNonNull(GraphQLID)
+      },
+      input: {
+        type: new GraphQLNonNull(UpdateConversationInput)
+      },
+      file: {
+        type: GraphQLUpload
+      }
+    },
+    resolve: async (_parent: unknown, args: any, _context: any) => {
+      return conversationService.updateConversation(args.input, args.file);
+    }  
   },
   deleteConversation: {
     type: new GraphQLNonNull(GraphQLBoolean),
