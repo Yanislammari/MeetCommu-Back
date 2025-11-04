@@ -16,6 +16,11 @@ class ConversationService {
     const conversations: Conversation[] = await this.conversationRepository.getConversationsByUserId(userId);
     return await Promise.all(conversations.map(async (conversation) => this.conversationMapper.conversationEntityToConversationOutputDto(conversation)));
   }
+
+  public async getConversationById(id: string): Promise<ConversationOutputDto> {
+    const conversation: Conversation = await this.conversationRepository.get(id);
+    return this.conversationMapper.conversationEntityToConversationOutputDto(conversation);
+  }
 }
 
 export default ConversationService;

@@ -16,6 +16,17 @@ const ConversationQuery = {
     resolve: async (_parent: unknown, args: any, _context: any) => {
       return await conversationService.getConversationsByUserId(args.userId);
     }
+  },
+  conversation: {
+    type: new GraphQLNonNull(ConversationType),
+    args: {
+      id: {
+        type: new GraphQLNonNull(GraphQLID)
+      }
+    },
+    resolve: async (_parent: unknown, args: any, _context: any) => {
+      return await conversationService.getConversationById(args.id);
+    }
   }
 };
 
