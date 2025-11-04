@@ -10,6 +10,8 @@ import MessageRepository from "../repositories/message.repository";
 import dotenv from "dotenv";
 import UpdateConversationInputDto from "../dtos/conversation/update.conversation.input.dto";
 import ConversationType from "../models/conversation.type";
+import User from "../models/user";
+import UserRepository from "../repositories/user.repository";
 
 dotenv.config();
 const BASE_URL: string = process.env.BASE_URL as string;
@@ -18,11 +20,13 @@ class ConversationService {
   private readonly conversationRepository: ConversationRepository;
   private readonly conversationMapper: ConversationMapper;
   private readonly messageRepository: MessageRepository;
+  private readonly userRepository: UserRepository;
 
   constructor() {
     this.conversationRepository = new ConversationRepository();
     this.conversationMapper = new ConversationMapper();
     this.messageRepository = new MessageRepository();
+    this.userRepository = new UserRepository();
   }
 
   public async getConversationsByUserId(userId: string): Promise<ConversationOutputDto[]> {
@@ -79,6 +83,18 @@ class ConversationService {
     });
 
     await this.conversationRepository.delete(id);
+  }
+
+  public async addUserToConversation(userId: string, conversationId: string): Promise<void> {
+    const user: User = await this.userRepository.get(userId);
+    const conversation: Conversation = await this.conversationRepository.get(conversationId);
+
+    if (conversation.participantsIds.includes(user.id)) {
+      throw new Error("USER_ALREADY_IN_CONVERSATION");
+    }
+
+    conversation.participantsIds.push(user.id);
+    await this.conversationRepository.update(conversationId, conversation);
   }
 }
 

@@ -274,6 +274,7 @@ type Mutation {
   deleteCommunity(id: ID!): Boolean!
   createConversation(input: CreateConversationInput!): Conversation!
   updateConversation(id: ID!, input: UpdateConversationInput!): Conversation!
+  addUserToConversation(userId: ID!, conversationID!): Boolean!
   deleteConversation(id: ID!): Boolean!
 }
 

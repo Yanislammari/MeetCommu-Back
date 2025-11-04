@@ -50,6 +50,21 @@ const ConversationMutation = {
       await conversationService.deleteConversation(args.id);
       return true;
     }
+  },
+  addUserToConversation: {
+    type: new GraphQLNonNull(GraphQLBoolean),
+    args: {
+      userId: {
+        type: new GraphQLNonNull(GraphQLID)
+      },
+      conversationId: {
+        type: new GraphQLNonNull(GraphQLID)
+      }
+    },
+    resolve: async (_parent: unknown, args: any, _context: any) => {
+      await conversationService.addUserToConversation(args.userId, args.conversationId);
+      return true;
+    }
   }
 }
 
