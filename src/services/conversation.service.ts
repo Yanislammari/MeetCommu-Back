@@ -1,10 +1,16 @@
-import { deleteFile } from "../config/file";
+import { FileUpload } from "graphql-upload/Upload.mjs";
+import { deleteFile, storeFile } from "../config/file";
 import ConversationOutputDto from "../dtos/conversation/conversation.output.dto";
+import CreateConversationInputDto from "../dtos/conversation/create.conversation.input.dto";
 import ConversationMapper from "../mappers/conversation.mapper";
 import Conversation from "../models/conversation";
 import Message from "../models/message";
 import ConversationRepository from "../repositories/conversation.repository";
 import MessageRepository from "../repositories/message.repository";
+import dotenv from "dotenv";
+
+dotenv.config();
+const BASE_URL: string = process.env.BASE_URL as string;
 
 class ConversationService {
   private readonly conversationRepository: ConversationRepository;
@@ -25,6 +31,18 @@ class ConversationService {
   public async getConversationById(id: string): Promise<ConversationOutputDto> {
     const conversation: Conversation = await this.conversationRepository.get(id);
     return this.conversationMapper.conversationEntityToConversationOutputDto(conversation);
+  }
+
+  public async addConversation(input: CreateConversationInputDto, picture?: Promise<FileUpload>): Promise<ConversationOutputDto> {
+    const conversation: Conversation = this.conversationMapper.createConversationInputDtoToConversationEntity(input);
+
+    if (picture) {
+      const fileName: string = await storeFile(picture, "conversation-pictures");
+      conversation.pictureUrl = `${BASE_URL}/uploads/conversation-pictures/${fileName}`;
+    }
+
+    const addedConversation: Conversation = await this.conversationRepository.create(conversation);
+    return this.conversationMapper.conversationEntityToConversationOutputDto(addedConversation);
   }
 
   public async deleteConversation(id: string): Promise<void> {

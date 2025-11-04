@@ -1,8 +1,12 @@
+import ConversationType from "./conversation.type";
+
 interface Conversation {
   id: string;
   participantsIds: string[];
   messagesIds: string[];
-  //group?: ; TO IMPLEMENT LATER
+  type: ConversationType;
+  title?: string;
+  pictureUrl?: string;
   createdAt: Date
   updatedAt: Date
 }

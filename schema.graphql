@@ -35,6 +35,11 @@ enum NotificationType {
   COMMENT
 }
 
+enum ConversationType {
+  DIRECT
+  GROUP
+}
+
 type User {
   id: ID!
   firstName: String!
@@ -188,7 +193,9 @@ type Conversation {
   id: ID!
   participants: [User!]!
   messages: [Message!]!
-  group: Group
+  type: ConversationType!
+  name: String
+  pictureUrl: URL
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -244,6 +251,12 @@ input UpdateCommunityInput {
   description: String
 }
 
+input CreateConversationInput {
+  participantIds: [ID!]!
+  type: ConversationType!
+  title: String
+}
+
 type Mutation {
   register(input: RegisterInput!): String!
   login(input: LoginInput!): String!
@@ -255,6 +268,7 @@ type Mutation {
   createCommunity(input: CreateCommunityInput!): Community!
   updateCommunity(id: ID!, input: UpdateCommunityInput!): Community!
   deleteCommunity(id: ID!): Boolean!
+  createConversation(input: CreateConversationInput!): Conversation!
   deleteConversation(id: ID!): Boolean!
 }
 
