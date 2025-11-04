@@ -178,11 +178,10 @@ type AskingFollowingRelation {
 type Message {
   id: ID!
   content: String!
+  attachementsUrls: [URL]
   sender: User!
-  receiver: User!
   createdAt: DateTime!
   updatedAt: DateTime!
-  conversation: Conversation!
 }
 
 type Conversation {
@@ -267,4 +266,9 @@ type Query {
   user(id: ID!): User
   communities: [Community!]!
   community(id: ID!): Community
+  conversationsOfUser(id: ID!): [Conversation!]!
+}
+
+type Subscription {
+  
 }

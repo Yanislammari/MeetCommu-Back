@@ -20,10 +20,10 @@ const CommunitySchema = new mongoose.Schema({
     ref: "User",
     required: true
   },
-  adminIds: [{
-    type: mongoose.Schema.Types.ObjectId,
+  adminIds: {
+    type: [mongoose.Schema.Types.ObjectId],
     ref: "User"
-  }],
+  },
 }, {
   timestamps: true,
   toJSON: { virtuals: true },

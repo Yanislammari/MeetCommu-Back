@@ -7,7 +7,7 @@ const communityService = new CommunityService();
 
 const CommunityQuery = {
   communities: {
-    type: new GraphQLNonNull(new GraphQLList(CommunityType)),
+    type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(CommunityType))),
     resolve: async (_parent: unknown, _args: any, _context: any) => {
       return await communityService.getAllCommunities();
     }

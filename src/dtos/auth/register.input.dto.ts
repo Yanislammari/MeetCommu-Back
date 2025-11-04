@@ -8,7 +8,7 @@ interface RegisterInputDto {
   email: string;
   password: string;
   role: Role;
-  visibility: Visibility
+  visibility: Visibility;
 }
 
 export default RegisterInputDto;

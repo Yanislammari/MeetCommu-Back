@@ -7,7 +7,7 @@ const userService = new UserService();
 
 const UserQuery = {
   users: {
-    type: new GraphQLNonNull(new GraphQLList(UserType)),
+    type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(UserType))),
     resolve: async (_parent: unknown, _args: any, _context: any) => {
       return await userService.getAllUsers();
     }

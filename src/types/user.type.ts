@@ -8,6 +8,7 @@ import DateTimeScalar from "../scalars/datetime.scalar";
 
 const UserType = new GraphQLObjectType({
   name: "User",
+  description: "User of the platform",
   fields: () => ({
     id: { 
       type: new GraphQLNonNull(GraphQLID)

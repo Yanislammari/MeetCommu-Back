@@ -3,7 +3,6 @@ import CreateCommunityInputDto from "../dtos/community/create.community.input.dt
 import UpdateCommunityInputDto from "../dtos/community/update.community.dto";
 import UserOutputDto from "../dtos/users/user.output.dto";
 import Community from "../models/community";
-import User from "../models/user";
 import UserService from "../services/user.service";
 
 class CommunityMapper {

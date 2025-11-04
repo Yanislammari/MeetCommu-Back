@@ -42,7 +42,7 @@ abstract class BaseRepository<T> implements IRepository<T> {
     }
   }
 
-  private transformObjectIdsToString(item: any): T {
+  public transformObjectIdsToString(item: any): T {
     if (item) {
       const plainItem = item.toObject();
 
