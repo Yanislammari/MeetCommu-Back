@@ -269,6 +269,7 @@ type Query {
   community(id: ID!): Community
   conversationsOfUser(id: ID!): [Conversation!]!
   conversation(id: ID!): Conversation!
+  messagesOfConversation(conversationId: ID!): [Message!]!
 }
 
 type Subscription {
