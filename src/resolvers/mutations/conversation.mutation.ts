@@ -19,7 +19,7 @@ const ConversationMutation = {
       }
     },
     resolve: async (_parent: unknown, args: any, _context: any) => {
-      return conversationService.addConversation(args.input, args.file);
+      return await conversationService.addConversation(args.input, args.file);
     }
   },
   updateConversation: {
@@ -36,7 +36,7 @@ const ConversationMutation = {
       }
     },
     resolve: async (_parent: unknown, args: any, _context: any) => {
-      return conversationService.updateConversation(args.input, args.file);
+      return await conversationService.updateConversation(args.input, args.file);
     }  
   },
   deleteConversation: {

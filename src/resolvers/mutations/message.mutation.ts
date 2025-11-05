@@ -22,7 +22,7 @@ const MessageMutation = {
       }
     },
     resolve: async (_parent: unknown, args: any, context: any) => {
-      return messageService.addMessage(args.conversationId, args.input, context.user.id, args.files);
+      return await messageService.addMessage(args.conversationId, args.input, context.user.id, args.files);
     }
   }
 };
