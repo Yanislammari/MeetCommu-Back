@@ -1,3 +1,4 @@
+import CreateMessageInputDto from "../dtos/message/create.message.input.dto";
 import MessageOutputDto from "../dtos/message/message.output.dto";
 import UserOutputDto from "../dtos/users/user.output.dto";
 import Message from "../models/message";
@@ -20,6 +21,16 @@ class MessageMapper {
       sender: sender,
       createdAt: message.createdAt,
       updatedAt: message.updatedAt
+    }
+  }
+
+  public createMessageInputDtoToMessageEntity(createMessageInputDto: CreateMessageInputDto): Message {
+    return {
+      id: "",
+      content: createMessageInputDto.content,
+      senderId: "",
+      createdAt: new Date(),
+      updatedAt: new Date()
     }
   }
 }
