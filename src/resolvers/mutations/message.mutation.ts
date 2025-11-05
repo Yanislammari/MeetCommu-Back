@@ -1,4 +1,4 @@
-import { GraphQLID, GraphQLNonNull } from "graphql";
+import { GraphQLBoolean, GraphQLID, GraphQLNonNull } from "graphql";
 import MessageService from "../../services/message.service";
 import MessageType from "../../types/message.type";
 import CreateMessageInput from "../../inputs/create.message.input";
@@ -41,6 +41,18 @@ const MessageMutation = {
     },
     resolve: async (_parent: unknown, args: any, _context: any) => {
       return await messageService.updateMessage(args.id, args.input, args.files);
+    }
+  },
+  deleteMessage: {
+    type: new GraphQLNonNull(GraphQLBoolean),
+    args: {
+      id: {
+        type: new GraphQLNonNull(GraphQLID)
+      }
+    },
+    resolve: async (_parent: unknown, args: any, _context: any) => {
+      await messageService.deleteMessage(args.id);
+      return true;
     }
   }
 };

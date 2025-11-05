@@ -285,9 +285,10 @@ type Mutation {
   updateConversation(id: ID!, input: UpdateConversationInput!): Conversation!
   addUserToConversation(userId: ID!, conversationID: ID!): Boolean!
   deleteUserFromConversation(userId: ID!, conversationID: ID!): Boolean!
+  deleteConversation(id: ID!): Boolean!
   sendMessage(conversationID: ID!, input: CreateMessageInput!): Message!
   updateMessage(id: ID!, input: UpdateMessageInput!): Message!
-  deleteConversation(id: ID!): Boolean!
+  deleteMessage(id: ID!): Boolean!
 }
 
 type Query {

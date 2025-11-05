@@ -81,6 +81,18 @@ class MessageService {
     const updatedMessage: Message = await this.messageRepository.update(id, message);
     return this.messageMapper.messageEntityToMessageOutputDto(updatedMessage);
   }
+
+  public async deleteMessage(id: string): Promise<void> {
+    const message: Message = await this.messageRepository.get(id);
+
+    if (message.attachementsUrls && message.attachementsUrls.length > 0) {
+      message.attachementsUrls.forEach(async (url: string) => {
+        await deleteFile(url);
+      });
+    }
+
+    await this.messageRepository.delete(id);
+  }
 }
 
 export default MessageService;
