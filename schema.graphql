@@ -281,6 +281,7 @@ type Query {
   community(id: ID!): Community
   conversationsOfUser(id: ID!): [Conversation!]!
   conversation(id: ID!): Conversation!
+  message(id: ID!): Message!
   messagesOfConversation(conversationId: ID!): [Message!]!
 }
 
