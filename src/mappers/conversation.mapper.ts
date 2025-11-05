@@ -47,7 +47,8 @@ class ConversationMapper {
   public updateConversationInputDtoToConversationEntity(input: UpdateConversationInputDto, existingConversation: Conversation): Conversation {
     return {
       ...existingConversation,
-      title: input.title ?? existingConversation.title
+      title: input.title ?? existingConversation.title,
+      updatedAt: new Date()
     }
   }
 }

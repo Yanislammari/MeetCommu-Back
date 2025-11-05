@@ -5,6 +5,7 @@ interface MessageOutputDto {
   content: string;
   attachementsUrls?: string[];
   sender: UserOutputDto;
+  isUpdated?: boolean;
   createdAt: Date;
   updatedAt: Date;
 }

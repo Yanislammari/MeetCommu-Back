@@ -1,4 +1,4 @@
-import { GraphQLList } from "graphql";
+import { GraphQLBoolean, GraphQLList } from "graphql";
 import { GraphQLID, GraphQLNonNull, GraphQLString } from "graphql";
 import { GraphQLObjectType } from "graphql";
 import UrlScalar from "../scalars/url.scalar";
@@ -20,6 +20,10 @@ const MessageType = new GraphQLObjectType({
     },
     sender: {
       type: new GraphQLNonNull(UserType)
+    },
+    isUpdated: {
+      type: GraphQLBoolean,
+      defaultValue: false
     },
     createdAt: {
       type: new GraphQLNonNull(DateTimeScalar)

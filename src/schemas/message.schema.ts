@@ -16,10 +16,10 @@ const MessageSchema = new mongoose.Schema({
     ref: "User",
     required: true,
   },
-  conversationId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Conversation",
-    required: true,
+  isUpdated: {
+    type: Boolean,
+    required: false,
+    default: false,
   },
 }, {
   timestamps: true,

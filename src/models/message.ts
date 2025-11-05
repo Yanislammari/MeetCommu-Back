@@ -3,6 +3,7 @@ interface Message {
   content: string;
   attachementsUrls?: string[];
   senderId: string;
+  isUpdated?: boolean;
   createdAt: Date
   updatedAt: Date
 }

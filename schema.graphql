@@ -185,6 +185,7 @@ type Message {
   content: String!
   attachementsUrls: [URL]
   sender: User!
+  isUpdated: Boolean = false
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -265,6 +266,10 @@ input CreateMessageInput {
   content: String!
 }
 
+input UpdateMessageInput {
+  content: String!
+}
+
 type Mutation {
   register(input: RegisterInput!): String!
   login(input: LoginInput!): String!
@@ -281,6 +286,7 @@ type Mutation {
   addUserToConversation(userId: ID!, conversationID: ID!): Boolean!
   deleteUserFromConversation(userId: ID!, conversationID: ID!): Boolean!
   sendMessage(conversationID: ID!, input: CreateMessageInput!): Message!
+  updateMessage(id: ID!, input: UpdateMessageInput!): Message!
   deleteConversation(id: ID!): Boolean!
 }
 
