@@ -96,6 +96,23 @@ class ConversationService {
     conversation.participantsIds.push(user.id);
     await this.conversationRepository.update(conversationId, conversation);
   }
+
+  public async deleteUserFromConversation(userId: string, conversationId: string): Promise<void> {
+    const user: User = await this.userRepository.get(userId);
+    const conversation: Conversation = await this.conversationRepository.get(conversationId);
+
+    if (!conversation.participantsIds.includes(user.id)) {
+      throw new Error("USER_NOT_IN_CONVERSATION");
+    }
+
+    conversation.participantsIds = conversation.participantsIds.filter((participantId) => participantId !== user.id);
+    if (conversation.participantsIds.length === 0) {
+      await this.conversationRepository.delete(conversationId);
+      return;
+    }
+
+    await this.conversationRepository.update(conversationId, conversation);
+  }
 }
 
 export default ConversationService;
