@@ -270,6 +270,20 @@ input UpdateMessageInput {
   content: String!
 }
 
+type Query {
+  me: User!
+  verifyResetPasswordToken: Boolean!
+  checkEmailAvailability(email: Email!): Boolean!
+  checkUsernameAvailability(username: String!): Boolean!
+  users: [User!]!
+  user(id: ID!): User
+  communities: [Community!]!
+  community(id: ID!): Community
+  conversationsOfUser(id: ID!): [Conversation!]!
+  conversation(id: ID!): Conversation!
+  messagesOfConversation(conversationId: ID!): [Message!]!
+}
+
 type Mutation {
   register(input: RegisterInput!): String!
   login(input: LoginInput!): String!
@@ -291,20 +305,6 @@ type Mutation {
   deleteMessage(id: ID!): Boolean!
 }
 
-type Query {
-  me: User!
-  verifyResetPasswordToken: Boolean!
-  checkEmailAvailability(email: Email!): Boolean!
-  checkUsernameAvailability(username: String!): Boolean!
-  users: [User!]!
-  user(id: ID!): User
-  communities: [Community!]!
-  community(id: ID!): Community
-  conversationsOfUser(id: ID!): [Conversation!]!
-  conversation(id: ID!): Conversation!
-  messagesOfConversation(conversationId: ID!): [Message!]!
-}
-
 type Subscription {
-  
+  messageSent(conversationID: ID!): Message!
 }

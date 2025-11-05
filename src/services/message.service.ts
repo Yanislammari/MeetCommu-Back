@@ -9,6 +9,7 @@ import MessageRepository from "../repositories/message.repository";
 import { deleteFile, storeFile } from "../config/file";
 import dotenv from "dotenv";
 import UpdateMessageInputDto from "../dtos/message/update.message.input.dto";
+import { pubSub } from "../config/websockets";
 
 dotenv.config();
 const BASE_URL: string = process.env.BASE_URL as string;
@@ -53,7 +54,11 @@ class MessageService {
     }
 
     const addedMessage: Message = await this.messageRepository.create(message);
-    return this.messageMapper.messageEntityToMessageOutputDto(addedMessage);
+    const messageDto: MessageOutputDto = await this.messageMapper.messageEntityToMessageOutputDto(addedMessage);
+
+    await pubSub.publish(`MESSAGE_SENT_${conversationId}`, { messageSent: messageDto });
+    
+    return messageDto;
   }
 
   public async updateMessage(id: string, input: UpdateMessageInputDto, attachements?: Promise<FileUpload[]>): Promise<MessageOutputDto> {

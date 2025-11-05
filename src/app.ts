@@ -12,6 +12,8 @@ import AuthService from "./services/auth.service";
 import UserRepository from "./repositories/user.repository";
 import User from "./models/user";
 import UserOutputDto from "./dtos/users/user.output.dto";
+import Subscription from "./resolvers/subscribtions/subscription";
+import { initWebSockets } from "./config/websockets";
 
 dotenv.config();
 
@@ -29,7 +31,8 @@ app.use(cors({
 
 const schema = new GraphQLSchema({
   query: Query,
-  mutation: Mutation
+  mutation: Mutation,
+  subscription: Subscription
 });
 
 app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
@@ -66,6 +69,8 @@ app.use("/graphql",
     }
   }
 ));
+
+initWebSockets(app, schema);
 
 (async () => {
   await connectToDatabase();
