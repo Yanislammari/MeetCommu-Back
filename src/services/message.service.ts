@@ -38,26 +38,27 @@ class MessageService {
 
   public async addMessage(conversationId: string, input: CreateMessageInputDto, senderId: string, attachements: Promise<FileUpload[]>): Promise<MessageOutputDto> {
     const message: Message = this.messageMapper.createMessageInputDtoToMessageEntity(input);
-    const conversation: Conversation = await this.conversationRepository.get(conversationId);
-
-    conversation.messagesIds.push(message.id);
-    await this.conversationRepository.update(conversationId, conversation);
-
     message.senderId = senderId;
 
     if (attachements) {
       const attachementFiles: FileUpload[] = await attachements;
-      message.attachementsUrls = await Promise.all(attachementFiles.map(async (file: FileUpload) => {
-        const fileName: string = await storeFile(Promise.resolve(file), "message-attachements");
-        return `${BASE_URL}/uploads/message-attachements/${fileName}`;
-      }));
+      message.attachementsUrls = await Promise.all(
+        attachementFiles.map(async (file: FileUpload) => {
+          const fileName = await storeFile(Promise.resolve(file), "message-attachements");
+          return `${BASE_URL}/uploads/message-attachements/${fileName}`;
+        })
+      );
     }
 
     const addedMessage: Message = await this.messageRepository.create(message);
+    const conversation: Conversation = await this.conversationRepository.get(conversationId);
+
+    conversation.messagesIds.push(addedMessage.id);
+    await this.conversationRepository.update(conversationId, conversation);
     const messageDto: MessageOutputDto = await this.messageMapper.messageEntityToMessageOutputDto(addedMessage);
 
     await pubSub.publish(`MESSAGE_SENT_${conversationId}`, { messageSent: messageDto });
-    
+
     return messageDto;
   }
 

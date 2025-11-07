@@ -21,8 +21,8 @@ class CommunityMapper {
       name: community.name,
       description: community.description,
       pictureUrl: community.pictureUrl,
-      creator,
-      admins,
+      creator: creator,
+      admins: admins,
       createdAt: community.createdAt,
       updatedAt: community.updatedAt
     }

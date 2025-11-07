@@ -12,6 +12,8 @@ import UpdateConversationInputDto from "../dtos/conversation/update.conversation
 import ConversationType from "../models/conversation.type";
 import User from "../models/user";
 import UserRepository from "../repositories/user.repository";
+import MessageOutputDto from "../dtos/message/message.output.dto";
+import MessageMapper from "../mappers/message.mapper";
 
 dotenv.config();
 const BASE_URL: string = process.env.BASE_URL as string;
@@ -21,12 +23,14 @@ class ConversationService {
   private readonly conversationMapper: ConversationMapper;
   private readonly messageRepository: MessageRepository;
   private readonly userRepository: UserRepository;
+  private readonly messageMapper: MessageMapper;
 
   constructor() {
     this.conversationRepository = new ConversationRepository();
     this.conversationMapper = new ConversationMapper();
     this.messageRepository = new MessageRepository();
     this.userRepository = new UserRepository();
+    this.messageMapper = new MessageMapper();
   }
 
   public async getConversationsByUserId(userId: string): Promise<ConversationOutputDto[]> {
@@ -112,6 +116,15 @@ class ConversationService {
     }
 
     await this.conversationRepository.update(conversationId, conversation);
+  }
+
+  public async getLastMessageOfConversation(conversationId: string): Promise<MessageOutputDto> {
+    const message: Message | null = await this.conversationRepository.getLastMessageOfConversation(conversationId);
+    if (!message) {
+      throw new Error("NO_MESSAGES_IN_CONVERSATION");
+    }
+
+    return this.messageMapper.messageEntityToMessageOutputDto(message);
   }
 }
 

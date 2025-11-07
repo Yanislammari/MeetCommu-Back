@@ -283,6 +283,7 @@ type Query {
   conversation(id: ID!): Conversation!
   message(id: ID!): Message!
   messagesOfConversation(conversationId: ID!): [Message!]!
+  lastMessageOfConversation(conversationId: ID!): Message!
 }
 
 type Mutation {

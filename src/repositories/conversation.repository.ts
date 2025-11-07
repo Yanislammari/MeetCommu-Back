@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import Conversation from "../models/conversation";
 import BaseRepository from "./base.repository";
 import ConversationSchema from "../schemas/conversation.schema";
+import Message from "../models/message";
 
 class ConversationRepository extends BaseRepository<Conversation> {
   constructor() {
@@ -14,6 +15,25 @@ class ConversationRepository extends BaseRepository<Conversation> {
       .sort({ updatedAt: -1 });
 
     return conversations.map((conversation) => this.transformObjectIdsToString(conversation));
+  }
+
+  public async getLastMessageOfConversation(conversationId: string): Promise<Message | null> {
+    const conversation = await this.model
+      .findById(conversationId)
+      .populate({
+        path: "messagesIds",
+        options: {
+          sort: { createdAt: -1 },
+          limit: 1
+        },
+      })
+      .select("messagesIds");
+
+    if (!conversation || !conversation.messagesIds.length) {
+      return null;
+    }
+
+    return conversation.messagesIds[0] as unknown as Message;
   }
 }
 
