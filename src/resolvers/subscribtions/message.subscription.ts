@@ -11,7 +11,7 @@ const MessageSubscription = {
       }
     },
     subscribe: (_parent: unknown, args: any, _context: any) => {
-      pubSub.asyncIterableIterator(`MESSAGE_SENT_${args.conversationID}`)
+      return pubSub.asyncIterableIterator(`MESSAGE_SENT_${args.conversationId}`)
     }
   }
 };

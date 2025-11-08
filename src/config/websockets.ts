@@ -14,6 +14,12 @@ export const initWebSockets = (app: Express, schema: GraphQLSchema): void => {
   });
 
   useServer({ schema }, webSocketServer);
+
+  const WS_PORT = process.env.WS_PORT;
+
+  server.listen(WS_PORT, () => {
+    console.log(`WebSocket server is running on port ${WS_PORT}`);
+  });
 }
 
 export const pubSub = new PubSub();
