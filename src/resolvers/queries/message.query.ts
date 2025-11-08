@@ -20,12 +20,12 @@ const MessageQuery = {
   messagesOfConversation: {
     type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(MessageType))),
     args: {
-      id: {
+      conversationId: {
         type: new GraphQLNonNull(GraphQLID)
       }
     },
     resolve: async (_parent: unknown, args: any, _context: any) => {
-      return await messageService.getMessageByConversationId(args.id);
+      return await messageService.getMessageByConversationId(args.conversationId);
     }
   }
 };
