@@ -85,7 +85,16 @@ class MessageService {
     }
 
     const updatedMessage: Message = await this.messageRepository.update(id, message);
-    return this.messageMapper.messageEntityToMessageOutputDto(updatedMessage);
+    const messageDto = await this.messageMapper.messageEntityToMessageOutputDto(updatedMessage);
+
+    const conversation: Conversation | null = await this.conversationRepository.getConversationOfMessage(id);
+    if (!conversation) {
+      throw new Error("MESSAGE_NOT_IN_CONVERSATION");
+    }
+
+    await pubSub.publish(`MESSAGE_UPDATED_${conversation.id}`, { messageUpdated: messageDto });
+
+    return messageDto;
   }
 
   public async deleteMessage(id: string): Promise<void> {

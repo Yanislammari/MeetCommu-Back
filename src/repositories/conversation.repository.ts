@@ -35,6 +35,15 @@ class ConversationRepository extends BaseRepository<Conversation> {
 
     return conversation.messagesIds[0] as unknown as Message;
   }
+
+  public async getConversationOfMessage(messageId: string): Promise<Conversation | null> {
+    const conversation = await this.model.findOne({ messagesIds: messageId });
+    if (!conversation) {
+      return null;
+    }
+    
+    return this.transformObjectIdsToString(conversation);
+  }
 }
 
 export default ConversationRepository;

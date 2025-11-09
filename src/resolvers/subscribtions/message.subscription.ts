@@ -13,6 +13,17 @@ const MessageSubscription = {
     subscribe: (_parent: unknown, args: any, _context: any) => {
       return pubSub.asyncIterableIterator(`MESSAGE_SENT_${args.conversationId}`)
     }
+  },
+  messageUpdated: {
+    type: new GraphQLNonNull(MessageType),
+    args: {
+      conversationId: {
+        type: new GraphQLNonNull(GraphQLID)
+      }
+    },
+    subscribe: (_parent: unknown, args: any, _context: any) => {
+      return pubSub.asyncIterableIterator(`MESSAGE_UPDATED_${args.conversationId}`)
+    }
   }
 };
 
