@@ -6,7 +6,7 @@ const MessageSchema = new mongoose.Schema({
     required: true,
     trim: true,
   },
-  attachmentUrls: {
+  attachmentsUrls: {
     type: [String],
     required: false,
     default: [],

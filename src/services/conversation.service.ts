@@ -77,8 +77,8 @@ class ConversationService {
     const messagesOfConversation: Message[] = await Promise.all(conversation.messagesIds.map((messageId: string) => this.messageRepository.get(messageId)));
 
     messagesOfConversation.forEach(async (message: Message) => {
-      if (message.attachementsUrls && message.attachementsUrls.length > 0) {
-        for (const messageUrl of message.attachementsUrls) {
+      if (message.attachmentsUrls && message.attachmentsUrls.length > 0) {
+        for (const messageUrl of message.attachmentsUrls) {
           await deleteFile(messageUrl);
         }
       }

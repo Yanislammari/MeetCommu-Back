@@ -3,7 +3,7 @@ import UserOutputDto from "../users/user.output.dto";
 interface MessageOutputDto {
   id: string;
   content: string;
-  attachementsUrls?: string[];
+  attachmentsUrls?: string[];
   sender: UserOutputDto;
   isUpdated?: boolean;
   createdAt: Date;

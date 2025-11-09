@@ -15,7 +15,7 @@ const MessageType = new GraphQLObjectType({
     content: {
       type: new GraphQLNonNull(GraphQLString)
     },
-    attachementsUrls: {
+    attachmentsUrls: {
       type: new GraphQLList(UrlScalar)
     },
     sender: {

@@ -183,7 +183,7 @@ type AskingFollowingRelation {
 type Message {
   id: ID!
   content: String!
-  attachementsUrls: [URL]
+  attachmentsUrls: [URL]
   sender: User!
   isUpdated: Boolean = false
   createdAt: DateTime!

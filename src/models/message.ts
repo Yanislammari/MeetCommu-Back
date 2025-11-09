@@ -1,7 +1,7 @@
 interface Message {
   id: string;
   content: string;
-  attachementsUrls?: string[];
+  attachmentsUrls?: string[];
   senderId: string;
   isUpdated?: boolean;
   createdAt: Date

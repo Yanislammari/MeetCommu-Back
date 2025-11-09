@@ -36,16 +36,16 @@ class MessageService {
     return await Promise.all(messages.map(async (message) => this.messageMapper.messageEntityToMessageOutputDto(message)));
   }
 
-  public async addMessage(conversationId: string, input: CreateMessageInputDto, senderId: string, attachements: Promise<FileUpload[]>): Promise<MessageOutputDto> {
+  public async addMessage(conversationId: string, input: CreateMessageInputDto, senderId: string, attachments: Promise<FileUpload[]>): Promise<MessageOutputDto> {
     const message: Message = this.messageMapper.createMessageInputDtoToMessageEntity(input);
     message.senderId = senderId;
 
-    if (attachements) {
-      const attachementFiles: FileUpload[] = await attachements;
-      message.attachementsUrls = await Promise.all(
-        attachementFiles.map(async (file: FileUpload) => {
-          const fileName = await storeFile(Promise.resolve(file), "message-attachements");
-          return `${BASE_URL}/uploads/message-attachements/${fileName}`;
+    if (attachments) {
+      const attachmentFiles: FileUpload[] = await attachments;
+      message.attachmentsUrls = await Promise.all(
+        attachmentFiles.map(async (file: FileUpload) => {
+          const fileName = await storeFile(Promise.resolve(file), "message-attachments");
+          return `${BASE_URL}/uploads/message-attachments/${fileName}`;
         })
       );
     }
@@ -62,25 +62,25 @@ class MessageService {
     return messageDto;
   }
 
-  public async updateMessage(id: string, input: UpdateMessageInputDto, attachements?: Promise<FileUpload[]>): Promise<MessageOutputDto> {
+  public async updateMessage(id: string, input: UpdateMessageInputDto, attachments?: Promise<FileUpload[]>): Promise<MessageOutputDto> {
     const existingMessage: Message = await this.messageRepository.get(id);
     const message: Message = this.messageMapper.updateMessageInputDtoToMessageEntity(input, existingMessage);
 
     message.isUpdated = true;
 
-    if (attachements) {
-      if (message.attachementsUrls && message.attachementsUrls.length > 0) {
-        message.attachementsUrls.forEach(async (url: string) => {
+    if (attachments) {
+      if (message.attachmentsUrls && message.attachmentsUrls.length > 0) {
+        message.attachmentsUrls.forEach(async (url: string) => {
           await deleteFile(url);
         });
 
-        message.attachementsUrls = [];
+        message.attachmentsUrls = [];
       }
 
-      const attachementFiles: FileUpload[] = await attachements;
-      message.attachementsUrls = await Promise.all(attachementFiles.map(async (file: FileUpload) => {
-        const fileName: string = await storeFile(Promise.resolve(file), "message-attachements");
-        return `${BASE_URL}/uploads/message-attachements/${fileName}`;
+      const attachmentFiles: FileUpload[] = await attachments;
+      message.attachmentsUrls = await Promise.all(attachmentFiles.map(async (file: FileUpload) => {
+        const fileName: string = await storeFile(Promise.resolve(file), "message-attachments");
+        return `${BASE_URL}/uploads/message-attachments/${fileName}`;
       }));
     }
 
@@ -91,8 +91,8 @@ class MessageService {
   public async deleteMessage(id: string): Promise<void> {
     const message: Message = await this.messageRepository.get(id);
 
-    if (message.attachementsUrls && message.attachementsUrls.length > 0) {
-      message.attachementsUrls.forEach(async (url: string) => {
+    if (message.attachmentsUrls && message.attachmentsUrls.length > 0) {
+      message.attachmentsUrls.forEach(async (url: string) => {
         await deleteFile(url);
       });
     }

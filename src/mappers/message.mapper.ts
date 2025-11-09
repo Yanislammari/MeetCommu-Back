@@ -18,7 +18,7 @@ class MessageMapper {
     return {
       id: message.id,
       content: message.content,
-      attachementsUrls: message.attachementsUrls,
+      attachmentsUrls: message.attachmentsUrls,
       sender: sender,
       isUpdated: message.isUpdated,
       createdAt: message.createdAt,
