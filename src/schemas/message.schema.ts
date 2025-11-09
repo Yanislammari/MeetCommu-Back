@@ -21,6 +21,11 @@ const MessageSchema = new mongoose.Schema({
     required: false,
     default: false,
   },
+  isDeleted: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
 }, {
   timestamps: true,
   toJSON: { virtuals: true },

@@ -6,6 +6,7 @@ interface MessageOutputDto {
   attachmentsUrls?: string[];
   sender: UserOutputDto;
   isUpdated?: boolean;
+  isDeleted?: boolean;
   createdAt: Date;
   updatedAt: Date;
 }

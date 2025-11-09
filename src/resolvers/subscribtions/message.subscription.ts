@@ -1,4 +1,4 @@
-import { GraphQLID, GraphQLNonNull } from "graphql";
+import { GraphQLBoolean, GraphQLID, GraphQLNonNull } from "graphql";
 import MessageType from "../../types/message.type";
 import { pubSub } from "../../config/websockets";
 
@@ -23,6 +23,17 @@ const MessageSubscription = {
     },
     subscribe: (_parent: unknown, args: any, _context: any) => {
       return pubSub.asyncIterableIterator(`MESSAGE_UPDATED_${args.conversationId}`)
+    }
+  },
+  messageDeleted: {
+    type: new GraphQLNonNull(GraphQLID),
+    args: {
+      conversationId: {
+        type: new GraphQLNonNull(GraphQLID)
+      }
+    },
+    subscribe: (_parent: unknown, args: any, _context: any) => {
+      return pubSub.asyncIterableIterator(`MESSAGE_DELETED_${args.conversationId}`)
     }
   }
 };

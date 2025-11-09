@@ -186,6 +186,7 @@ type Message {
   attachmentsUrls: [URL]
   sender: User!
   isUpdated: Boolean = false
+  isDeleted: Boolean = false
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -310,4 +311,5 @@ type Mutation {
 type Subscription {
   messageSent(conversationID: ID!): Message!
   messageUpdated(conversationID: ID!): Message!
+  messageDeleted(conversationID: ID!): ID!
 }

@@ -25,6 +25,10 @@ const MessageType = new GraphQLObjectType({
       type: GraphQLBoolean,
       defaultValue: false
     },
+    isDeleted: {
+      type: GraphQLBoolean,
+      defaultValue: false
+    },
     createdAt: {
       type: new GraphQLNonNull(DateTimeScalar)
     },

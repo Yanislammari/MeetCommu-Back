@@ -4,6 +4,7 @@ interface Message {
   attachmentsUrls?: string[];
   senderId: string;
   isUpdated?: boolean;
+  isDeleted?: boolean;
   createdAt: Date
   updatedAt: Date
 }

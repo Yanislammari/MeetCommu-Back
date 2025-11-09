@@ -21,6 +21,7 @@ class MessageMapper {
       attachmentsUrls: message.attachmentsUrls,
       sender: sender,
       isUpdated: message.isUpdated,
+      isDeleted: message.isDeleted,
       createdAt: message.createdAt,
       updatedAt: message.updatedAt
     }
@@ -32,6 +33,7 @@ class MessageMapper {
       content: createMessageInputDto.content,
       senderId: "",
       isUpdated: false,
+      isDeleted: false,
       createdAt: new Date(),
       updatedAt: new Date()
     }

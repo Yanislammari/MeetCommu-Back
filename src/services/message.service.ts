@@ -106,7 +106,17 @@ class MessageService {
       });
     }
 
-    await this.messageRepository.delete(id);
+    message.isDeleted = true;
+    message.content = "[MESSAGE_DELETED]";
+    message.attachmentsUrls = [];
+
+    const conversation: Conversation | null = await this.conversationRepository.getConversationOfMessage(id);
+    if (!conversation) {
+      throw new Error("MESSAGE_NOT_IN_CONVERSATION");
+    }
+
+    await pubSub.publish(`MESSAGE_DELETED_${conversation.id}`, { messageDeleted: message.id });
+    await this.messageRepository.update(id, message);
   }
 }
 
